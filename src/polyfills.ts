@@ -42,12 +42,11 @@
  *
  */
 
-import './zone-flags';
-
 /***************************************************************************************************
- * Zone JS is required by default for Angular itself.
+ * Zone JS was previously required by default for Angular itself.
+ * In Angular 21+, Zoneless is supported and ZoneJS can be removed.
  */
-import 'zone.js';  // Included with Angular CLI.
+// import 'zone.js';  // Removed for Zoneless
 
 
 /***************************************************************************************************
