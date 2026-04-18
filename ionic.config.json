@@ -1,0 +1,7 @@
+{
+  "name": "mestyApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
