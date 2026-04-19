@@ -23,6 +23,16 @@ export const routes: Routes = [
         path: 'register',
         loadComponent: () => import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
       },
+      {
+        path: 'two-fa-setup',
+        loadComponent: () => import('./features/auth/two-fa-setup/two-fa-setup.component').then((m) => m.TwoFaSetupComponent),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'sessions',
+        loadComponent: () => import('./features/auth/sessions/sessions.component').then((m) => m.SessionsComponent),
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

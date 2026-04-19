@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Active Sessions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="loadSessions($any($event))">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (errorMessage()) {
+    <div class="error-banner ion-margin">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <ion-list lines="full">
+      @for (item of [1, 2, 3]; track item) {
+        <ion-item class="session-item">
+          <ion-label>
+            <ion-skeleton-text animated style="width: 40%; height: 16px; margin-bottom: 6px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 60%; height: 12px;"></ion-skeleton-text>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  @if (!isLoading() && sessions().length > 0) {
+    <ion-list lines="none" class="sessions-list">
+      @for (session of sessions(); track session.id) {
+        <ion-item-sliding>
+          <ion-item class="session-item" [class.current-session]="session.is_current">
+            <div slot="start" class="device-icon-wrap">
+              <ion-icon [name]="getDeviceIcon(session.device_type)"></ion-icon>
+            </div>
+            <ion-label>
+              <h3>
+                {{ session.device_name }}
+                @if (session.is_current) {
+                  <ion-badge color="primary" class="current-badge">This Device</ion-badge>
+                }
+              </h3>
+              <p>{{ session.device_type }} · {{ session.ip_address }}</p>
+              <p class="last-active">{{ formatLastActive(session.last_active_at) }}</p>
+            </ion-label>
+          </ion-item>
+
+          @if (!session.is_current) {
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="revokeSession(session.id)">
+                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          }
+        </ion-item-sliding>
+      }
+    </ion-list>
+
+    <p class="sessions-hint ion-text-center ion-padding">Swipe left on a session to revoke it</p>
+  }
+
+  @if (!isLoading() && sessions().length === 0) {
+    <div class="empty-state">
+      <p>No active sessions found.</p>
+    </div>
+  }
+</ion-content>

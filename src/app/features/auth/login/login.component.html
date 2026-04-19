@@ -1,27 +1,151 @@
-<ion-content class="ion-padding" [fullscreen]="true">
+<ion-content [fullscreen]="true">
   <div class="auth-container">
     <div class="auth-header">
-      <h1 class="display-hero">Mesty</h1>
-      <p class="body-standard">Sign in to continue</p>
+      <h1 class="auth-logo">Mesty</h1>
     </div>
 
-    <ion-list lines="none" class="auth-form">
-      <ion-item>
-        <ion-input
-          label="Phone Number"
-          labelPlacement="stacked"
-          type="tel"
-          placeholder="+1 555 123 4567"
-        ></ion-input>
-      </ion-item>
-    </ion-list>
+    @if (step() === 'phone') {
+      <div class="auth-card" [formGroup]="phoneForm">
+        <div class="step-header">
+          <h2 class="section-heading">Sign In</h2>
+          <p class="body-standard">Enter your phone number to receive a code</p>
+        </div>
 
-    <ion-button expand="block" color="primary" class="auth-button">
-      Request Code
-    </ion-button>
+        <ion-list lines="none" class="auth-form">
+          <ion-item class="auth-item" [class.item-error]="phoneForm.controls.phone.touched && phoneForm.controls.phone.invalid">
+            <ion-input
+              label="Phone Number"
+              labelPlacement="stacked"
+              type="tel"
+              placeholder="+1 555 123 4567"
+              formControlName="phone"
+              autocomplete="tel"
+            ></ion-input>
+          </ion-item>
+          @if (phoneForm.controls.phone.touched && phoneForm.controls.phone.invalid) {
+            <ion-note color="danger" class="field-error">Enter a valid phone number (e.g. +15551234567)</ion-note>
+          }
+        </ion-list>
 
-    <ion-text color="medium" class="auth-footer">
-      <p>Don't have an account? <a routerLink="/auth/register">Sign up</a></p>
-    </ion-text>
+        @if (errorMessage()) {
+          <div class="error-banner">{{ errorMessage() }}</div>
+        }
+
+        <ion-button
+          expand="block"
+          color="primary"
+          class="auth-button"
+          [disabled]="isLoading()"
+          (click)="onRequestCode()"
+        >
+          @if (isLoading()) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            Continue
+          }
+        </ion-button>
+
+        <ion-text class="auth-footer">
+          <p>Don't have an account? <a routerLink="/auth/register">Sign up</a></p>
+        </ion-text>
+      </div>
+    }
+
+    @if (step() === 'otp') {
+      <div class="auth-card" [formGroup]="otpForm">
+        <div class="step-header">
+          <h2 class="section-heading">Enter Code</h2>
+          <p class="body-standard">We sent a 6-digit code to {{ phoneForm.controls.phone.value }}</p>
+        </div>
+
+        <ion-list lines="none" class="auth-form">
+          <ion-item class="auth-item otp-item" [class.item-error]="otpForm.controls.code.touched && otpForm.controls.code.invalid">
+            <ion-input
+              label="Verification Code"
+              labelPlacement="stacked"
+              type="number"
+              maxlength="6"
+              placeholder="123456"
+              formControlName="code"
+              autocomplete="one-time-code"
+              inputmode="numeric"
+            ></ion-input>
+          </ion-item>
+          @if (otpForm.controls.code.touched && otpForm.controls.code.invalid) {
+            <ion-note color="danger" class="field-error">Enter the 6-digit code</ion-note>
+          }
+        </ion-list>
+
+        @if (errorMessage()) {
+          <div class="error-banner">{{ errorMessage() }}</div>
+        }
+
+        <ion-button
+          expand="block"
+          color="primary"
+          class="auth-button"
+          [disabled]="isLoading()"
+          (click)="onVerifyOtp()"
+        >
+          @if (isLoading()) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            Verify Code
+          }
+        </ion-button>
+
+        <ion-button fill="clear" color="medium" class="back-button" (click)="goBack()">
+          Back
+        </ion-button>
+      </div>
+    }
+
+    @if (step() === 'twofa') {
+      <div class="auth-card" [formGroup]="twoFaForm">
+        <div class="step-header">
+          <h2 class="section-heading">Two-Factor Auth</h2>
+          <p class="body-standard">Enter your authenticator app code</p>
+        </div>
+
+        <ion-list lines="none" class="auth-form">
+          <ion-item class="auth-item otp-item" [class.item-error]="twoFaForm.controls.code.touched && twoFaForm.controls.code.invalid">
+            <ion-input
+              label="Authenticator Code"
+              labelPlacement="stacked"
+              type="number"
+              maxlength="6"
+              placeholder="123456"
+              formControlName="code"
+              inputmode="numeric"
+            ></ion-input>
+          </ion-item>
+          @if (twoFaForm.controls.code.touched && twoFaForm.controls.code.invalid) {
+            <ion-note color="danger" class="field-error">Enter your 6-digit authenticator code</ion-note>
+          }
+        </ion-list>
+
+        @if (errorMessage()) {
+          <div class="error-banner">{{ errorMessage() }}</div>
+        }
+
+        <ion-button
+          expand="block"
+          color="primary"
+          class="auth-button"
+          [disabled]="isLoading()"
+          (click)="onVerify2Fa()"
+        >
+          @if (isLoading()) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            Verify
+          }
+        </ion-button>
+
+        <ion-button fill="clear" color="medium" class="back-button" (click)="goBack()">
+          Back
+        </ion-button>
+      </div>
+    }
   </div>
 </ion-content>

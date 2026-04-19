@@ -1,0 +1,99 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Two-Factor Authentication</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  @if (step() === 'intro') {
+    <div class="twofa-card">
+      <div class="twofa-icon">
+        <ion-icon name="shield-checkmark-outline" color="primary"></ion-icon>
+      </div>
+      <h2 class="section-heading">Add Extra Security</h2>
+      <p class="body-standard">Enable two-factor authentication to protect your Mesty account with an additional verification step on every login.</p>
+
+      @if (errorMessage()) {
+        <div class="error-banner">{{ errorMessage() }}</div>
+      }
+
+      <ion-button
+        expand="block"
+        color="primary"
+        class="action-button"
+        [disabled]="isLoading()"
+        (click)="onInitSetup()"
+      >
+        @if (isLoading()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Enable 2FA
+        }
+      </ion-button>
+    </div>
+  }
+
+  @if (step() === 'code') {
+    <div class="twofa-card" [formGroup]="codeForm">
+      <h2 class="section-heading">Your Setup Code</h2>
+      <p class="body-standard">Enter this code in your authenticator app (Google Authenticator, Authy, etc.), then enter the generated 6-digit code below.</p>
+
+      <div class="setup-code-box">
+        <span class="setup-code">{{ setupCode() }}</span>
+        <p class="setup-code-label">Tap to copy</p>
+      </div>
+
+      <ion-list lines="none" class="auth-form">
+        <ion-item class="auth-item otp-item" [class.item-error]="codeForm.controls.code.touched && codeForm.controls.code.invalid">
+          <ion-input
+            label="Authenticator Code"
+            labelPlacement="stacked"
+            type="number"
+            maxlength="6"
+            placeholder="123456"
+            formControlName="code"
+            inputmode="numeric"
+          ></ion-input>
+        </ion-item>
+        @if (codeForm.controls.code.touched && codeForm.controls.code.invalid) {
+          <ion-note color="danger" class="field-error">Enter the 6-digit code from your app</ion-note>
+        }
+      </ion-list>
+
+      @if (errorMessage()) {
+        <div class="error-banner">{{ errorMessage() }}</div>
+      }
+
+      <ion-button
+        expand="block"
+        color="primary"
+        class="action-button"
+        [disabled]="isLoading()"
+        (click)="onVerifySetup()"
+      >
+        @if (isLoading()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Verify and Enable
+        }
+      </ion-button>
+    </div>
+  }
+
+  @if (step() === 'done') {
+    <div class="twofa-card twofa-success">
+      <div class="twofa-icon success">
+        <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+      </div>
+      <h2 class="section-heading">2FA Enabled!</h2>
+      <p class="body-standard">Your account is now protected with two-factor authentication. You'll need your authenticator app on your next login.</p>
+
+      <ion-button expand="block" color="primary" class="action-button" routerLink="/settings">
+        Done
+      </ion-button>
+    </div>
+  }
+</ion-content>

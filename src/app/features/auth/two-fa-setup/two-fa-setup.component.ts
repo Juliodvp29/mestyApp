@@ -4,85 +4,80 @@ import {
   signal,
   inject,
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
   IonContent,
   IonButton,
   IonInput,
   IonItem,
   IonList,
-  IonText,
   IonSpinner,
   IonNote,
+  IonIcon,
+  IonButtons,
+  IonBackButton,
 } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { shieldCheckmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { AuthApiService } from '@core/auth/auth-api.service';
 import { ErrorHandlerService } from '@core/errors/error-handler.service';
-import { getDeviceId, getDeviceName, getDeviceType } from '@core/utils/device.utils';
 
-type RegisterStep = 'phone' | 'otp';
+type TwoFaStep = 'intro' | 'code' | 'done';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  selector: 'app-two-fa-setup',
+  templateUrl: './two-fa-setup.component.html',
+  styleUrls: ['./two-fa-setup.component.scss'],
   standalone: true,
   imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
     IonContent,
     IonButton,
     IonInput,
     IonItem,
     IonList,
-    IonText,
     IonSpinner,
     IonNote,
-    RouterLink,
+    IonIcon,
+    IonButtons,
+    IonBackButton,
     ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent {
+export class TwoFaSetupComponent {
   private authApi = inject(AuthApiService);
   private errorHandler = inject(ErrorHandlerService);
-  private router = inject(Router);
 
-  readonly step = signal<RegisterStep>('phone');
+  readonly step = signal<TwoFaStep>('intro');
   readonly isLoading = signal(false);
   readonly errorMessage = signal('');
+  readonly setupCode = signal('');
 
-  readonly phoneForm = new FormGroup({
-    phone: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.pattern(/^\+[1-9]\d{7,14}$/)],
-    }),
-  });
-
-  readonly otpForm = new FormGroup({
+  readonly codeForm = new FormGroup({
     code: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(/^\d{6}$/)],
     }),
   });
 
-  async onRequestCode(): Promise<void> {
-    if (this.phoneForm.invalid) {
-      this.phoneForm.markAllAsTouched();
-      return;
-    }
+  constructor() {
+    addIcons({ shieldCheckmarkOutline, checkmarkCircleOutline });
+  }
+
+  async onInitSetup(): Promise<void> {
     this.isLoading.set(true);
     this.errorMessage.set('');
     try {
-      await firstValueFrom(
-        this.authApi.register({
-          phone: this.phoneForm.controls.phone.value,
-          device_id: getDeviceId(),
-          device_name: getDeviceName(),
-          device_type: getDeviceType(),
-        })
-      );
-      this.step.set('otp');
+      const response = await firstValueFrom(this.authApi.twoFaSetup());
+      this.setupCode.set(response.code);
+      this.step.set('code');
     } catch (err: unknown) {
       const appError = this.errorHandler.mapHttpError(err as import('@angular/common/http').HttpErrorResponse);
       this.errorMessage.set(appError.message);
@@ -91,34 +86,23 @@ export class RegisterComponent {
     }
   }
 
-  async onVerifyOtp(): Promise<void> {
-    if (this.otpForm.invalid) {
-      this.otpForm.markAllAsTouched();
+  async onVerifySetup(): Promise<void> {
+    if (this.codeForm.invalid) {
+      this.codeForm.markAllAsTouched();
       return;
     }
     this.isLoading.set(true);
     this.errorMessage.set('');
     try {
       await firstValueFrom(
-        this.authApi.verifyPhone({
-          phone: this.phoneForm.controls.phone.value,
-          code: this.otpForm.controls.code.value,
-          device_id: getDeviceId(),
-          device_name: getDeviceName(),
-          device_type: getDeviceType(),
-        })
+        this.authApi.twoFaSetupVerify({ code: this.codeForm.controls.code.value })
       );
-      this.router.navigate(['/chats']);
+      this.step.set('done');
     } catch (err: unknown) {
       const appError = this.errorHandler.mapHttpError(err as import('@angular/common/http').HttpErrorResponse);
       this.errorMessage.set(appError.message);
     } finally {
       this.isLoading.set(false);
     }
-  }
-
-  goBack(): void {
-    this.step.set('phone');
-    this.errorMessage.set('');
   }
 }
