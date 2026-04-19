@@ -68,3 +68,10 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+/design-reference.png
+AGENTS.md
+API_USE_DOC.md
+DESIGN.md
+ROADMAP.md
+.agents/
