@@ -1,3 +1,26 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-split-pane contentId="main-content" when="md">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="glass-effect">
+          <ion-title>Messages</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-list lines="full">
+          <ion-item button routerLink="/chats" routerDirection="root">
+            <ion-label>
+              <h2 class="body-emphasis">All Chats</h2>
+              <p>Start a conversation</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <div class="ion-page" id="main-content">
+      <ion-router-outlet></ion-router-outlet>
+    </div>
+  </ion-split-pane>
 </ion-app>

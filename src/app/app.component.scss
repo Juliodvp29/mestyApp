@@ -1,0 +1,22 @@
+ion-menu {
+  --width: 350px;
+  --border: 1px solid var(--ion-border-color);
+  
+  ion-content {
+    --background: var(--ion-background-color);
+  }
+}
+
+ion-split-pane {
+  --border: 1px solid var(--ion-border-color);
+}
+
+/* Ensure the main content area has the right background */
+#main-content {
+  background: var(--ion-background-color);
+}
+
+.body-emphasis {
+  font-weight: 600;
+  color: var(--ion-text-color);
+}

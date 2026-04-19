@@ -34,4 +34,76 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/**
+ * Mesty App Global Styles
+ */
+
+:root {
+  --mesty-glass-blur: blur(20px);
+  --mesty-glass-saturate: saturate(180%);
+  --mesty-glass-background: rgba(255, 255, 255, 0.82);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mesty-glass-background: rgba(0, 0, 0, 0.82);
+  }
+}
+
+.glass-effect {
+  --background: transparent;
+  backdrop-filter: var(--mesty-glass-saturate) var(--mesty-glass-blur);
+  -webkit-backdrop-filter: var(--mesty-glass-saturate) var(--mesty-glass-blur);
+  background: var(--mesty-glass-background);
+}
+
+/* Typography Helpers */
+.display-hero {
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.025em; /* approx -0.28px */
+}
+
+.section-heading {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.10;
+  letter-spacing: normal;
+}
+
+.body-standard {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.022em; /* approx -0.374px */
+}
+
+/* Border Radius Scale */
+.radius-micro { border-radius: 5px; }
+.radius-standard { border-radius: 8px; }
+.radius-comfortable { border-radius: 11px; }
+.radius-large { border-radius: 12px; }
+.radius-pill { border-radius: 980px; }
+.radius-circle { border-radius: 50%; }
+
+/* Scrollbar Customization for Premium Look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--ion-text-color-rgb), 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(var(--ion-text-color-rgb), 0.2);
+}
