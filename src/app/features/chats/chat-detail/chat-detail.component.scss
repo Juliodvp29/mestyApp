@@ -1,0 +1,239 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-header {
+  ion-toolbar {
+    --background: rgba(var(--ion-background-color-rgb), 0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+  flex: 1;
+}
+
+.header-avatar {
+  position: relative;
+  flex-shrink: 0;
+
+  ion-avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.avatar-initial {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: #34c759;
+  border-radius: 50%;
+  border: 2px solid var(--ion-background-color);
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.header-name {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+  color: var(--ion-text-color);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-sub {
+  font-size: 12px;
+  margin: 0;
+  letter-spacing: -0.012em;
+
+  &.typing {
+    color: var(--ion-color-primary);
+    font-style: italic;
+  }
+
+  &.online {
+    color: #34c759;
+  }
+}
+
+.messages-content {
+  --background: var(--ion-background-color);
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 8px 8px;
+  gap: 1px;
+  min-height: 100%;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.date-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 8px;
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgba(var(--ion-text-color-rgb), 0.4);
+    background: var(--ion-background-color);
+    padding: 3px 12px;
+    border-radius: 980px;
+    border: 1px solid var(--ion-color-step-100);
+  }
+}
+
+.empty-chat {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  .empty-chat-icon {
+    font-size: 48px;
+    color: rgba(var(--ion-text-color-rgb), 0.18);
+  }
+
+  p {
+    font-size: 15px;
+    color: rgba(var(--ion-text-color-rgb), 0.4);
+    letter-spacing: -0.016em;
+    margin: 0;
+  }
+}
+
+.messages-end {
+  height: 8px;
+}
+
+.compose-footer {
+  background: rgba(var(--ion-background-color-rgb), 0.92);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 0.5px solid var(--ion-color-step-150);
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px 2px;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+
+  span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ion-color-primary);
+    animation: typingBounce 1.2s infinite ease-in-out;
+
+    &:nth-child(2) { animation-delay: 0.15s; }
+    &:nth-child(3) { animation-delay: 0.3s; }
+  }
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
+
+.typing-label {
+  font-size: 12px;
+  color: var(--ion-color-primary);
+  font-style: italic;
+  letter-spacing: -0.011em;
+}
+
+.compose-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 12px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+}
+
+.compose-input {
+  flex: 1;
+  --background: var(--ion-color-step-100);
+  --border-radius: 22px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  font-size: 15px;
+  letter-spacing: -0.016em;
+  max-height: 120px;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.send-btn {
+  --border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+
+  ion-icon {
+    font-size: 18px;
+  }
+
+  ion-spinner {
+    width: 16px;
+    height: 16px;
+  }
+}

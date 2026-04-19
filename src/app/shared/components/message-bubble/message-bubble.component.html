@@ -1,0 +1,53 @@
+<div
+  class="bubble-wrap"
+  [class.mine]="isMine()"
+  [class.theirs]="!isMine()"
+>
+  @if (!isMine() && senderName()) {
+    <span class="sender-name">{{ senderName() }}</span>
+  }
+
+  <div class="bubble" [class.deleted]="isDeleted">
+    @if (isDeleted) {
+      <span class="deleted-text"><ion-icon name="ban-outline" class="deleted-icon"></ion-icon> Message deleted</span>
+    } @else {
+      <div class="bubble-content">
+        @if (message().content_encrypted) {
+          <p class="message-text"><ion-icon name="lock-closed-outline" class="encrypted-icon"></ion-icon> {{ message().content_encrypted }}</p>
+        }
+      </div>
+
+      <div class="bubble-footer">
+        @if (isEdited) {
+          <span class="edited-label">edited</span>
+        }
+        <span class="message-time">{{ message().created_at | messageTime }}</span>
+        @if (isMine()) {
+          <ion-icon name="checkmark-done-outline" class="read-icon"></ion-icon>
+        }
+      </div>
+    }
+  </div>
+
+  @if (!isDeleted && message().reaction_groups.length > 0) {
+    <div class="reactions-row" [class.mine]="isMine()">
+      @for (group of message().reaction_groups; track group.reaction) {
+        <button
+          class="reaction-chip"
+          [class.reacted]="group.reacted_by_me"
+          (click)="react(group.reaction)"
+        >
+          {{ group.reaction }} <span class="reaction-count">{{ group.count }}</span>
+        </button>
+      }
+    </div>
+  }
+
+  @if (!isDeleted && isMine()) {
+    <div class="message-actions mine">
+      <button class="action-btn" (click)="requestDelete()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
+    </div>
+  }
+</div>

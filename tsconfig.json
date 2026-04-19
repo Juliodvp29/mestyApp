@@ -24,6 +24,8 @@
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
       "@features/*": ["src/app/features/*"],
+      "@components/*": ["src/app/shared/components/*"],
+      "@pipes/*": ["src/app/shared/pipes/*"],
       "@env/*": ["src/environments/*"]
     }
   },

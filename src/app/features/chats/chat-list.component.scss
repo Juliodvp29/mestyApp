@@ -151,6 +151,18 @@ ion-label {
     color: rgba(var(--ion-text-color-rgb), 0.75);
     font-weight: 500;
   }
+
+  &.encrypted-preview {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.lock-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+  opacity: 0.6;
 }
 
 .typing-text {

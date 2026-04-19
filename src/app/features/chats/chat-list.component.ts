@@ -18,7 +18,7 @@ import {
   IonButtons,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { createOutline, searchOutline } from 'ionicons/icons';
+import { createOutline, searchOutline, lockClosedOutline } from 'ionicons/icons';
 import { ChatStore } from '@features/chats/chat.store';
 import { PresenceService } from '@core/websocket/presence.service';
 import { TypingService } from '@core/websocket/typing.service';
@@ -59,7 +59,7 @@ export class ChatListComponent implements OnInit {
   readonly currentUserId = signal(this.authService.user()?.id ?? '');
 
   constructor() {
-    addIcons({ createOutline, searchOutline });
+    addIcons({ createOutline, searchOutline, lockClosedOutline });
   }
 
   ngOnInit(): void {

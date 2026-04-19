@@ -72,7 +72,13 @@
                 @if (getTypingText(chat.chat_id)) {
                   <span class="typing-text">{{ getTypingText(chat.chat_id) }}</span>
                 } @else {
-                  <span class="last-message">{{ chat.last_message_encrypted ? '🔒 Encrypted message' : 'No messages yet' }}</span>
+                  @if (chat.last_message_encrypted) {
+                    <span class="last-message encrypted-preview">
+                      <ion-icon name="lock-closed-outline" class="lock-icon"></ion-icon> Encrypted message
+                    </span>
+                  } @else {
+                    <span class="last-message">No messages yet</span>
+                  }
                 }
                 @if (chat.unread_count > 0) {
                   <ion-badge color="primary" class="unread-badge">{{ chat.unread_count > 99 ? '99+' : chat.unread_count }}</ion-badge>
@@ -109,9 +115,13 @@
                 @if (getTypingText(chat.chat_id)) {
                   <span class="typing-text">{{ getTypingText(chat.chat_id) }}</span>
                 } @else {
-                  <span class="last-message" [class.font-medium]="chat.unread_count > 0">
-                    {{ chat.last_message_encrypted ? '🔒 Encrypted message' : 'No messages yet' }}
-                  </span>
+                  @if (chat.last_message_encrypted) {
+                    <span class="last-message encrypted-preview" [class.font-medium]="chat.unread_count > 0">
+                      <ion-icon name="lock-closed-outline" class="lock-icon"></ion-icon> Encrypted message
+                    </span>
+                  } @else {
+                    <span class="last-message" [class.font-medium]="chat.unread_count > 0">No messages yet</span>
+                  }
                 }
                 @if (chat.unread_count > 0) {
                   <ion-badge color="primary" class="unread-badge">{{ chat.unread_count > 99 ? '99+' : chat.unread_count }}</ion-badge>

@@ -1,0 +1,113 @@
+<ion-header class="ion-no-border chat-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/chats"></ion-back-button>
+    </ion-buttons>
+
+    <div class="header-center" slot="start">
+      <div class="header-avatar">
+        @if (chat()?.avatar_url) {
+          <ion-avatar>
+            <img [src]="chat()!.avatar_url" [alt]="chatName()" />
+          </ion-avatar>
+        } @else {
+          <div class="avatar-initial">{{ getInitial(chatName()) }}</div>
+        }
+        @if (chat()?.last_sender_id && presenceService.isOnline(chat()!.last_sender_id!)) {
+          <span class="online-dot"></span>
+        }
+      </div>
+      <div class="header-info">
+        <h2 class="header-name">{{ chatName() }}</h2>
+        @if (typingText()) {
+          <p class="header-sub typing">{{ typingText() }}</p>
+        } @else if (chat()?.last_sender_id && presenceService.isOnline(chat()!.last_sender_id!)) {
+          <p class="header-sub online">Online</p>
+        }
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="messages-content">
+  @if (store.loading()) {
+    <div class="loading-state">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+  } @else {
+    <div class="messages-list">
+      @if (store.canLoadMore()) {
+        <div class="load-more">
+          <ion-button fill="clear" size="small" (click)="store.loadOlderMessages()">
+            @if (store.loadingMore()) {
+              <ion-spinner name="crescent" slot="start"></ion-spinner>
+            }
+            Load older messages
+          </ion-button>
+        </div>
+      }
+
+      @for (message of store.messages(); track message.id; let i = $index) {
+        @if (showDateSeparator(i)) {
+          <div class="date-separator">
+            <span>{{ message.created_at | messageDateLabel }}</span>
+          </div>
+        }
+
+        <app-message-bubble
+          [message]="message"
+          [isMine]="message.sender_id === currentUserId()"
+          (deleted)="onDeleteMessage($event)"
+          (reacted)="onReact($event)"
+        ></app-message-bubble>
+      }
+
+      @if (store.messages().length === 0) {
+        <div class="empty-chat">
+          <ion-icon name="chatbubble-ellipses-outline" class="empty-chat-icon"></ion-icon>
+          <p>No messages yet. Start the conversation.</p>
+        </div>
+      }
+
+      <div #messagesEnd class="messages-end"></div>
+    </div>
+  }
+</ion-content>
+
+<ion-footer class="compose-footer ion-no-border">
+  @if (typingText()) {
+    <div class="typing-indicator">
+      <span class="typing-dots">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="typing-label">{{ typingText() }}</span>
+    </div>
+  }
+
+  <div class="compose-bar">
+    <ion-textarea
+      class="compose-input"
+      [(ngModel)]="messageText"
+      placeholder="Message"
+      [autoGrow]="true"
+      [rows]="1"
+      [maxlength]="4000"
+      (ionInput)="onTextInput()"
+      (keydown)="onKeydown($event)"
+    ></ion-textarea>
+
+    <ion-button
+      class="send-btn"
+      shape="round"
+      color="primary"
+      [disabled]="!messageText().trim() || isSending()"
+      (click)="onSend()"
+    >
+      @if (isSending()) {
+        <ion-spinner name="crescent" slot="icon-only"></ion-spinner>
+      } @else {
+        <ion-icon slot="icon-only" name="arrow-up-outline"></ion-icon>
+      }
+    </ion-button>
+  </div>
+</ion-footer>
