@@ -1,8 +1,8 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="glass-effect">
+<ion-header class="ion-no-border chat-list-header">
+  <ion-toolbar>
     <ion-title>Messages</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="primary">
+      <ion-button (click)="openChat('new')">
         <ion-icon slot="icon-only" name="create-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -10,18 +10,117 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Messages</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($any($event))">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-  <div class="empty-state ion-text-center">
-    <h2 class="display-hero">No Chats</h2>
-    <p class="body-standard">Your conversations will appear here.</p>
-    <ion-button fill="clear" color="primary" class="radius-pill">
-      Start Messaging
-      <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
-    </ion-button>
-  </div>
+  @if (chatStore.loading() && chatStore.chats().length === 0) {
+    <ion-list class="chat-list" lines="none">
+      @for (item of skeletonItems; track item) {
+        <ion-item class="chat-item" lines="none">
+          <div slot="start" class="avatar-skeleton">
+            <ion-skeleton-text animated style="width: 100%; height: 100%; border-radius: 50%;"></ion-skeleton-text>
+          </div>
+          <ion-label>
+            <ion-skeleton-text animated style="width: 55%; height: 14px; margin-bottom: 8px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 80%; height: 12px;"></ion-skeleton-text>
+          </ion-label>
+          <div slot="end" class="chat-meta">
+            <ion-skeleton-text animated style="width: 30px; height: 10px; margin-bottom: 8px;"></ion-skeleton-text>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  @if (!chatStore.loading() || chatStore.chats().length > 0) {
+    @if (chatStore.error()) {
+      <div class="error-banner">{{ chatStore.error() }}</div>
+    }
+
+    @if (chatStore.chats().length === 0 && !chatStore.loading()) {
+      <div class="empty-state">
+        <ion-icon name="create-outline" class="empty-icon"></ion-icon>
+        <h3>No Messages Yet</h3>
+        <p>Start a new conversation using the button above.</p>
+      </div>
+    }
+
+    @if (chatStore.pinnedChats().length > 0) {
+      <div class="section-label">Pinned</div>
+      <ion-list class="chat-list" lines="none">
+        @for (chat of chatStore.pinnedChats(); track chat.chat_id) {
+          <ion-item class="chat-item" lines="none" button (click)="openChat(chat.chat_id)">
+            <div slot="start" class="avatar-wrap">
+              @if (chat.avatar_url) {
+                <ion-avatar>
+                  <img [src]="chat.avatar_url" [alt]="getChatName(chat)" />
+                </ion-avatar>
+              } @else {
+                <div class="avatar-initial">{{ getInitial(getChatName(chat)) }}</div>
+              }
+              @if (chat.chat_type === 'private' && chat.last_sender_id && presenceService.isOnline(chat.last_sender_id)) {
+                <span class="online-dot"></span>
+              }
+            </div>
+            <ion-label>
+              <div class="chat-row-top">
+                <span class="chat-name">{{ getChatName(chat) }}</span>
+                <span class="chat-time">{{ formatTime(chat.last_message_at) }}</span>
+              </div>
+              <div class="chat-row-bottom">
+                @if (getTypingText(chat.chat_id)) {
+                  <span class="typing-text">{{ getTypingText(chat.chat_id) }}</span>
+                } @else {
+                  <span class="last-message">{{ chat.last_message_encrypted ? '🔒 Encrypted message' : 'No messages yet' }}</span>
+                }
+                @if (chat.unread_count > 0) {
+                  <ion-badge color="primary" class="unread-badge">{{ chat.unread_count > 99 ? '99+' : chat.unread_count }}</ion-badge>
+                }
+              </div>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+
+    @if (chatStore.unpinnedChats().length > 0) {
+      <ion-list class="chat-list" lines="none">
+        @for (chat of chatStore.unpinnedChats(); track chat.chat_id) {
+          <ion-item class="chat-item" lines="none" button (click)="openChat(chat.chat_id)">
+            <div slot="start" class="avatar-wrap">
+              @if (chat.avatar_url) {
+                <ion-avatar>
+                  <img [src]="chat.avatar_url" [alt]="getChatName(chat)" />
+                </ion-avatar>
+              } @else {
+                <div class="avatar-initial">{{ getInitial(getChatName(chat)) }}</div>
+              }
+              @if (chat.chat_type === 'private' && chat.last_sender_id && presenceService.isOnline(chat.last_sender_id)) {
+                <span class="online-dot"></span>
+              }
+            </div>
+            <ion-label>
+              <div class="chat-row-top">
+                <span class="chat-name" [class.font-bold]="chat.unread_count > 0">{{ getChatName(chat) }}</span>
+                <span class="chat-time">{{ formatTime(chat.last_message_at) }}</span>
+              </div>
+              <div class="chat-row-bottom">
+                @if (getTypingText(chat.chat_id)) {
+                  <span class="typing-text">{{ getTypingText(chat.chat_id) }}</span>
+                } @else {
+                  <span class="last-message" [class.font-medium]="chat.unread_count > 0">
+                    {{ chat.last_message_encrypted ? '🔒 Encrypted message' : 'No messages yet' }}
+                  </span>
+                }
+                @if (chat.unread_count > 0) {
+                  <ion-badge color="primary" class="unread-badge">{{ chat.unread_count > 99 ? '99+' : chat.unread_count }}</ion-badge>
+                }
+              </div>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+  }
 </ion-content>

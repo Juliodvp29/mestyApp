@@ -1,39 +1,57 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { 
-  IonApp, 
-  IonRouterOutlet, 
-  IonSplitPane, 
-  IonMenu, 
-  IonContent, 
-  IonList, 
-  IonItem, 
-  IonLabel, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle
+import {
+  IonApp,
+  IonRouterOutlet,
+  IonSplitPane,
+  IonMenu,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
 } from '@ionic/angular/standalone';
+import { AuthService } from '@core/auth/auth.service';
+import { WebSocketService } from '@core/websocket/websocket.service';
+import { WsEventDispatcherService } from '@core/websocket/ws-event-dispatcher.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  standalone: true,
   imports: [
-    IonApp, 
-    IonRouterOutlet, 
-    IonSplitPane, 
-    IonMenu, 
-    IonContent, 
-    IonList, 
-    IonItem, 
-    IonLabel, 
-    IonHeader, 
-    IonToolbar, 
+    IonApp,
+    IonRouterOutlet,
+    IonSplitPane,
+    IonMenu,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonHeader,
+    IonToolbar,
     IonTitle,
-    RouterLink
+    RouterLink,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor() {}
+  private readonly authService = inject(AuthService);
+  private readonly wsService = inject(WebSocketService);
+  private readonly dispatcher = inject(WsEventDispatcherService);
+
+  constructor() {
+    this.dispatcher.initialize();
+
+    effect(() => {
+      if (this.authService.isAuthenticated()) {
+        this.wsService.connect();
+      } else {
+        this.wsService.disconnect();
+      }
+    });
+  }
 }

@@ -9,8 +9,17 @@ export const routes: Routes = [
   },
   {
     path: 'chats',
-    loadComponent: () => import('./features/chats/chat-list.component').then((m) => m.ChatListComponent),
     canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/chats/chat-list.component').then((m) => m.ChatListComponent),
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./features/chats/chat-detail/chat-detail.component').then((m) => m.ChatDetailComponent),
+      },
+    ],
   },
   {
     path: 'auth',
