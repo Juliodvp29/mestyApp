@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  apiUrl: 'https://api.mesty.app',
+  wsUrl: 'wss://api.mesty.app/ws',
 };

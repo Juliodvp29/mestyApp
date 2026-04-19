@@ -1,0 +1,27 @@
+<ion-content class="ion-padding" [fullscreen]="true">
+  <div class="auth-container">
+    <div class="auth-header">
+      <h1 class="display-hero">Mesty</h1>
+      <p class="body-standard">Sign in to continue</p>
+    </div>
+
+    <ion-list lines="none" class="auth-form">
+      <ion-item>
+        <ion-input
+          label="Phone Number"
+          labelPlacement="stacked"
+          type="tel"
+          placeholder="+1 555 123 4567"
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" color="primary" class="auth-button">
+      Request Code
+    </ion-button>
+
+    <ion-text color="medium" class="auth-footer">
+      <p>Don't have an account? <a routerLink="/auth/register">Sign up</a></p>
+    </ion-text>
+  </div>
+</ion-content>
