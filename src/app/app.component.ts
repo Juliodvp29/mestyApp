@@ -1,21 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import {
   IonApp,
   IonRouterOutlet,
-  IonSplitPane,
-  IonMenu,
-  IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
+  IonTabs,
+  IonTabBar,
+  IonTabButton,
   IonIcon,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { chatbubblesOutline, personCircleOutline, peopleOutline } from 'ionicons/icons';
+import { chatbubblesOutline, chatbubbles, settingsOutline, settings } from 'ionicons/icons';
 import { AuthService } from '@core/auth/auth.service';
 import { WebSocketService } from '@core/websocket/websocket.service';
 import { WsEventDispatcherService } from '@core/websocket/ws-event-dispatcher.service';
@@ -28,17 +22,11 @@ import { WsEventDispatcherService } from '@core/websocket/ws-event-dispatcher.se
   imports: [
     IonApp,
     IonRouterOutlet,
-    IonSplitPane,
-    IonMenu,
-    IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
     IonIcon,
-    RouterLink,
+    IonLabel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -48,7 +36,7 @@ export class AppComponent {
   private readonly dispatcher = inject(WsEventDispatcherService);
 
   constructor() {
-    addIcons({ chatbubblesOutline, personCircleOutline, peopleOutline });
+    addIcons({ chatbubblesOutline, chatbubbles, settingsOutline, settings });
     this.dispatcher.initialize();
 
     effect(() => {

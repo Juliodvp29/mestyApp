@@ -1,10 +1,10 @@
 <ion-header class="ion-no-border chat-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/chats"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/chats"></ion-back-button>
     </ion-buttons>
 
-    <div class="header-center" slot="start" [routerLink]="['/chats', chatId(), 'group-info']" style="cursor: pointer;">
+    <div class="header-center" slot="start" [routerLink]="['/tabs/chats', chatId(), 'group-info']">
       <div class="header-avatar">
         @if (chat()?.avatar_url) {
           <ion-avatar>

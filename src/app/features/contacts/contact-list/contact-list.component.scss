@@ -1,18 +1,17 @@
 :host {
-  --apple-blue: #0071e3;
-  --bg-color: #f5f5f7;
-  --divider-bg: rgba(245, 245, 247, 0.88);
+  display: block;
+  height: 100%;
 }
 
 ion-content {
-  --background: var(--bg-color);
+  --background: var(--ion-background-color);
 }
 
 .apple-searchbar {
-  --background: #ffffff;
+  --background: var(--ion-color-step-100);
   --border-radius: 10px;
-  --placeholder-color: #8e8e93;
-  --icon-color: #8e8e93;
+  --placeholder-color: var(--mesty-secondary-text);
+  --icon-color: var(--mesty-secondary-text);
   padding-bottom: 8px;
 }
 
@@ -21,16 +20,16 @@ ion-content {
   padding: 0 16px 16px;
 
   ion-item-group {
-    background: #ffffff;
+    background: var(--mesty-surface-card);
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.04);
   }
 
   ion-item-divider {
-    --background: var(--divider-bg);
-    --color: #1d1d1f;
+    --background: rgba(var(--ion-background-color-rgb), 0.88);
+    --color: var(--ion-text-color);
     --padding-start: 16px;
     --height: 32px;
     font-weight: 600;
@@ -38,19 +37,21 @@ ion-content {
     font-size: 13px;
     letter-spacing: 0.5px;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 }
 
 .avatar-placeholder {
   width: 100%;
   height: 100%;
-  background: #e5e5ea;
-  color: #8e8e93;
+  background: var(--ion-color-step-100);
+  color: var(--mesty-secondary-text);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 18px;
+  border-radius: 50%;
 }
 
 .contact-item {
@@ -62,12 +63,14 @@ ion-content {
     font-weight: 600;
     font-size: 17px;
     margin-bottom: 2px;
-    color: #1d1d1f;
+    color: var(--ion-text-color);
+    letter-spacing: -0.016em;
   }
 
   p {
     font-size: 14px;
-    color: #8e8e93;
+    color: var(--mesty-secondary-text);
+    letter-spacing: -0.01em;
   }
 }
 
@@ -79,22 +82,37 @@ ion-content {
   height: 60%;
   padding: 40px;
   text-align: center;
-  color: #8e8e93;
+  animation: mestyFadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 
   ion-icon {
-    font-size: 64px;
+    font-size: 56px;
     margin-bottom: 16px;
-    color: #aeaeb2;
+    color: var(--mesty-tertiary-text);
   }
 
   h3 {
     font-weight: 600;
-    color: #1d1d1f;
+    color: var(--ion-text-color);
     margin-bottom: 8px;
+    font-size: 20px;
+    letter-spacing: -0.022em;
   }
 
   p {
     font-size: 15px;
-    max-width: 200px;
+    max-width: 220px;
+    color: var(--mesty-secondary-text);
+    line-height: 1.5;
+  }
+}
+
+@keyframes mestyFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

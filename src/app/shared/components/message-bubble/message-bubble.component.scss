@@ -6,7 +6,8 @@
   display: flex;
   flex-direction: column;
   margin: 2px 0;
-  max-width: 75%;
+  max-width: 78%;
+  animation: mestyFadeIn 0.15s ease both;
 
   &.mine {
     align-self: flex-end;
@@ -25,7 +26,7 @@
   color: var(--ion-color-primary);
   margin-bottom: 3px;
   padding-left: 12px;
-  letter-spacing: -0.011em;
+  letter-spacing: -0.012em;
 }
 
 .bubble {
@@ -34,10 +35,11 @@
   position: relative;
   max-width: 100%;
   word-break: break-word;
+  transition: transform var(--mesty-transition-fast);
 
   .mine & {
     background: var(--ion-color-primary);
-    color: #fff;
+    color: #ffffff;
     border-bottom-right-radius: 4px;
   }
 
@@ -49,10 +51,10 @@
 
   &.deleted {
     background: var(--ion-color-step-50);
-    border: 1px solid var(--ion-color-step-150);
+    border: 0.5px solid var(--mesty-separator);
 
     .theirs & {
-      border: 1px solid var(--ion-color-step-150);
+      border: 0.5px solid var(--mesty-separator);
     }
   }
 }
@@ -60,7 +62,7 @@
 .deleted-text {
   font-size: 14px;
   font-style: italic;
-  color: rgba(var(--ion-text-color-rgb), 0.4);
+  color: var(--mesty-secondary-text);
   letter-spacing: -0.016em;
   display: flex;
   align-items: center;
@@ -82,13 +84,18 @@
   overflow: hidden;
   border-radius: 12px;
   max-width: 100%;
+  transition: transform var(--mesty-transition-fast);
+
+  &:active {
+    transform: scale(0.97);
+  }
 
   .media-preview {
     display: block;
     width: 100%;
     min-height: 100px;
     object-fit: cover;
-    max-height: 250px;
+    max-height: 260px;
     border-radius: 12px;
   }
 
@@ -102,9 +109,10 @@
       position: absolute;
       font-size: 40px;
       color: #ffffff;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.35);
       border-radius: 50%;
-      padding: 8px;
+      padding: 10px;
+      backdrop-filter: blur(4px);
     }
   }
 
@@ -112,15 +120,16 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(var(--ion-background-color-rgb), 0.8);
+    background: rgba(var(--ion-background-color-rgb), 0.75);
     padding: 10px 14px;
     border-radius: 12px;
-    border: 1px solid var(--ion-color-step-150);
+    border: 0.5px solid var(--mesty-separator);
+    backdrop-filter: blur(8px);
 
     .mine & {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.2);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
     }
 
     .file-info {
@@ -134,19 +143,25 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        letter-spacing: -0.01em;
       }
     }
 
     .download-icon {
       font-size: 20px;
-      opacity: 0.6;
+      opacity: 0.55;
+      transition: opacity var(--mesty-transition-fast);
+
+      &:hover {
+        opacity: 0.85;
+      }
     }
   }
 }
 
 .message-text {
   font-size: 15px;
-  line-height: 1.47;
+  line-height: 1.45;
   letter-spacing: -0.016em;
   margin: 0;
   white-space: pre-wrap;
@@ -155,9 +170,9 @@
   gap: 5px;
 
   .encrypted-icon {
-    font-size: 13px;
+    font-size: 12px;
     flex-shrink: 0;
-    opacity: 0.7;
+    opacity: 0.65;
   }
 }
 
@@ -171,21 +186,21 @@
 
 .edited-label {
   font-size: 10px;
-  opacity: 0.6;
+  opacity: 0.55;
   font-style: italic;
   letter-spacing: -0.08px;
 }
 
 .message-time {
   font-size: 11px;
-  opacity: 0.6;
+  opacity: 0.55;
   letter-spacing: -0.08px;
   white-space: nowrap;
 }
 
 .read-icon {
   font-size: 13px;
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 .reactions-row {
@@ -202,30 +217,30 @@
 
 .reaction-chip {
   background: var(--ion-color-step-100);
-  border: 1px solid var(--ion-color-step-200);
+  border: 0.5px solid var(--mesty-separator);
   border-radius: 980px;
-  padding: 2px 8px;
-  font-size: 13px;
+  padding: 3px 8px;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 3px;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: background var(--mesty-transition-fast), transform 0.1s ease;
 
   &.reacted {
-    background: rgba(var(--ion-color-primary-rgb), 0.15);
-    border-color: rgba(var(--ion-color-primary-rgb), 0.4);
+    background: rgba(var(--ion-color-primary-rgb), 0.12);
+    border-color: rgba(var(--ion-color-primary-rgb), 0.3);
   }
 
   &:active {
-    transform: scale(0.92);
+    transform: scale(0.88);
   }
 }
 
 .reaction-count {
   font-size: 11px;
   font-weight: 600;
-  color: rgba(var(--ion-text-color-rgb), 0.7);
+  color: rgba(var(--ion-text-color-rgb), 0.65);
   letter-spacing: -0.08px;
 }
 
@@ -233,7 +248,7 @@
   display: flex;
   gap: 2px;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
   margin-top: 2px;
 
   .bubble-wrap:hover & {
@@ -249,23 +264,27 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 5px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s ease;
+  transition: background var(--mesty-transition-fast);
 
   ion-icon {
     font-size: 14px;
-    color: rgba(var(--ion-text-color-rgb), 0.45);
+    color: rgba(var(--ion-text-color-rgb), 0.4);
   }
 
   &:hover {
     background: var(--ion-color-step-100);
 
     ion-icon {
-      color: #ff453a;
+      color: var(--ion-color-danger);
     }
+  }
+
+  &:active {
+    transform: scale(0.88);
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonHeader,
@@ -16,9 +16,13 @@ import {
   IonIcon,
   IonButton,
   IonButtons,
+  IonSearchbar,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { createOutline, searchOutline, lockClosedOutline } from 'ionicons/icons';
+import { createOutline, searchOutline, lockClosedOutline, cameraOutline, addOutline, trashOutline, archiveOutline } from 'ionicons/icons';
 import { ChatStore } from '@features/chats/chat.store';
 import { PresenceService } from '@core/websocket/presence.service';
 import { TypingService } from '@core/websocket/typing.service';
@@ -46,7 +50,11 @@ import { StoriesBarComponent } from '../stories/stories-bar/stories-bar.componen
     IonIcon,
     IonButton,
     IonButtons,
-    StoriesBarComponent
+    IonSearchbar,
+    IonItemSliding,
+    IonItemOptions,
+    IonItemOption,
+    StoriesBarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,11 +65,28 @@ export class ChatListComponent implements OnInit {
   readonly authService: AuthService = inject(AuthService);
   private readonly router: Router = inject(Router);
 
-  readonly skeletonItems = [1, 2, 3, 4, 5, 6];
+  readonly skeletonItems = [1, 2, 3, 4, 5, 6, 7];
   readonly currentUserId = signal(this.authService.user()?.id ?? '');
+  readonly searchQuery = signal('');
+
+  readonly filteredPinnedChats = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return this.chatStore.pinnedChats();
+    return this.chatStore.pinnedChats().filter(c =>
+      this.getChatName(c).toLowerCase().includes(query)
+    );
+  });
+
+  readonly filteredUnpinnedChats = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return this.chatStore.unpinnedChats();
+    return this.chatStore.unpinnedChats().filter(c =>
+      this.getChatName(c).toLowerCase().includes(query)
+    );
+  });
 
   constructor() {
-    addIcons({ createOutline, searchOutline, lockClosedOutline });
+    addIcons({ createOutline, searchOutline, lockClosedOutline, cameraOutline, addOutline, trashOutline, archiveOutline });
   }
 
   ngOnInit(): void {
@@ -73,8 +98,12 @@ export class ChatListComponent implements OnInit {
     event.target.complete();
   }
 
+  onSearchInput(event: CustomEvent): void {
+    this.searchQuery.set((event.detail.value as string) ?? '');
+  }
+
   openChat(chatId: string): void {
-    this.router.navigate(['/chats', chatId]);
+    this.router.navigate(['/tabs/chats', chatId]);
   }
 
   getChatName(chat: ReturnType<typeof this.chatStore.chats>[number]): string {
@@ -99,6 +128,11 @@ export class ChatListComponent implements OnInit {
     const isToday = date.toDateString() === now.toDateString();
     if (isToday) {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
     }
     const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
     if (diffDays < 7) {

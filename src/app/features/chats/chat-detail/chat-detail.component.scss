@@ -6,9 +6,11 @@
 
 .chat-header {
   ion-toolbar {
-    --background: rgba(var(--ion-background-color-rgb), 0.85);
+    --background: rgba(var(--ion-background-color-rgb), 0.88);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
+    --border-width: 0;
+    border-bottom: 0.5px solid var(--mesty-separator);
   }
 }
 
@@ -18,6 +20,12 @@
   gap: 10px;
   padding: 4px 0;
   flex: 1;
+  cursor: pointer;
+  transition: opacity var(--mesty-transition-fast);
+
+  &:active {
+    opacity: 0.7;
+  }
 }
 
 .header-avatar {
@@ -35,7 +43,7 @@
   height: 36px;
   border-radius: 50%;
   background: var(--ion-color-primary);
-  color: white;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,9 +57,10 @@
   right: 0;
   width: 10px;
   height: 10px;
-  background: #34c759;
+  background: var(--mesty-online-green);
   border-radius: 50%;
   border: 2px solid var(--ion-background-color);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.06);
 }
 
 .header-info {
@@ -64,7 +73,7 @@
 .header-name {
   font-size: 16px;
   font-weight: 600;
-  letter-spacing: -0.016em;
+  letter-spacing: -0.018em;
   color: var(--ion-text-color);
   margin: 0;
   white-space: nowrap;
@@ -76,6 +85,7 @@
   font-size: 12px;
   margin: 0;
   letter-spacing: -0.012em;
+  font-weight: 400;
 
   &.typing {
     color: var(--ion-color-primary);
@@ -83,7 +93,7 @@
   }
 
   &.online {
-    color: #34c759;
+    color: var(--mesty-online-green);
   }
 }
 
@@ -101,7 +111,7 @@
 .messages-list {
   display: flex;
   flex-direction: column;
-  padding: 12px 8px 8px;
+  padding: 12px 10px 8px;
   gap: 1px;
   min-height: 100%;
 }
@@ -110,23 +120,29 @@
   display: flex;
   justify-content: center;
   padding: 8px 0;
+
+  ion-button {
+    --color: var(--ion-color-primary);
+    font-size: 13px;
+    font-weight: 500;
+  }
 }
 
 .date-separator {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 0 8px;
+  padding: 14px 0 10px;
 
   span {
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.02em;
-    color: rgba(var(--ion-text-color-rgb), 0.4);
-    background: var(--ion-background-color);
-    padding: 3px 12px;
+    color: var(--mesty-secondary-text);
+    background: var(--ion-color-step-50);
+    padding: 4px 14px;
     border-radius: 980px;
-    border: 1px solid var(--ion-color-step-100);
+    border: 0.5px solid var(--mesty-separator);
   }
 }
 
@@ -136,16 +152,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
+  animation: mestyFadeIn 0.4s ease both;
 
   .empty-chat-icon {
-    font-size: 48px;
-    color: rgba(var(--ion-text-color-rgb), 0.18);
+    font-size: 52px;
+    color: rgba(var(--ion-text-color-rgb), 0.15);
   }
 
   p {
     font-size: 15px;
-    color: rgba(var(--ion-text-color-rgb), 0.4);
+    color: var(--mesty-secondary-text);
     letter-spacing: -0.016em;
     margin: 0;
   }
@@ -159,7 +176,7 @@
   background: rgba(var(--ion-background-color-rgb), 0.92);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-top: 0.5px solid var(--ion-color-step-150);
+  border-top: 0.5px solid var(--mesty-separator);
 }
 
 .typing-indicator {
@@ -195,14 +212,14 @@
   font-size: 12px;
   color: var(--ion-color-primary);
   font-style: italic;
-  letter-spacing: -0.011em;
+  letter-spacing: -0.012em;
 }
 
 .compose-bar {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 8px 10px;
   padding-bottom: max(8px, env(safe-area-inset-bottom));
 }
 
@@ -219,6 +236,11 @@
   max-height: 120px;
   border-radius: 22px;
   overflow: hidden;
+  transition: box-shadow var(--mesty-transition-fast);
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+  }
 }
 
 .send-btn {
@@ -227,6 +249,11 @@
   height: 36px;
   flex-shrink: 0;
   margin-bottom: 2px;
+  transition: transform var(--mesty-transition-fast);
+
+  &:active {
+    transform: scale(0.88);
+  }
 
   ion-icon {
     font-size: 18px;
@@ -240,14 +267,19 @@
 
 .attach-btn {
   --border-radius: 50%;
-  --color: rgba(var(--ion-text-color-rgb), 0.5);
+  --color: var(--mesty-secondary-text);
   width: 36px;
   height: 36px;
   flex-shrink: 0;
   margin-bottom: 2px;
+  transition: transform var(--mesty-transition-fast);
+
+  &:active {
+    transform: scale(0.88);
+  }
 
   ion-icon {
-    font-size: 20px;
+    font-size: 22px;
   }
 }
 
@@ -264,7 +296,7 @@
 
 .upload-label {
   font-size: 11px;
-  color: rgba(var(--ion-text-color-rgb), 0.5);
+  color: var(--mesty-secondary-text);
   letter-spacing: -0.01em;
 }
 
@@ -272,4 +304,5 @@
   padding: 4px 16px;
   font-size: 12px;
   color: var(--ion-color-danger);
+  animation: mestyFadeIn 0.2s ease;
 }

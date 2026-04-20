@@ -1,12 +1,14 @@
 .stories-scroll-container {
   display: flex;
   overflow-x: auto;
-  padding: 16px 12px;
-  gap: 16px;
+  padding: 14px 16px;
+  gap: 14px;
   background: var(--ion-background-color);
-  border-bottom: 1px solid var(--ion-color-step-100);
+  border-bottom: 0.5px solid var(--mesty-separator);
   scrollbar-width: none;
   -ms-overflow-style: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
     display: none;
@@ -17,32 +19,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  min-width: 68px;
+  gap: 5px;
+  min-width: 72px;
   cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform var(--mesty-transition-fast);
+
+  &:active {
+    transform: scale(0.95);
+  }
 
   ion-text {
     font-size: 11px;
     font-weight: 500;
     color: var(--ion-text-color);
-    max-width: 64px;
+    max-width: 68px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    letter-spacing: -0.01em;
   }
 }
 
 .avatar-ring {
   padding: 3px;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 2.5px solid transparent;
   transition: border-color 0.3s ease;
 
   ion-avatar {
-    width: 56px;
-    height: 56px;
-    border: 1px solid var(--ion-color-step-100);
+    width: 58px;
+    height: 58px;
+    border: 1.5px solid var(--ion-color-step-100);
   }
 
   &.unviewed {
@@ -50,7 +59,7 @@
   }
 
   &.has-stories {
-    border-color: #34c759;
+    border-color: var(--mesty-online-green);
   }
 }
 
@@ -62,11 +71,12 @@
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 20px;
-  color: var(--ion-color-step-400);
+  font-size: 22px;
+  color: var(--mesty-secondary-text);
+  border-radius: 50%;
 
   ion-icon {
-    font-size: 24px;
+    font-size: 26px;
     color: var(--ion-color-primary);
   }
 }
@@ -74,22 +84,25 @@
 .my-story {
   .avatar-ring {
     position: relative;
-    
+
     &::after {
       content: '+';
       position: absolute;
-      bottom: 2px;
-      right: 2px;
+      bottom: 1px;
+      right: 1px;
       background: var(--ion-color-primary);
-      color: #fff;
-      width: 18px;
-      height: 18px;
+      color: #ffffff;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      border: 2px solid var(--ion-background-color);
+      font-size: 15px;
+      font-weight: 500;
+      border: 2.5px solid var(--ion-background-color);
+      line-height: 1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     }
   }
 }

@@ -1,0 +1,91 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title size="large">Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Settings</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="profile-card" (click)="openProfile()">
+    <div class="profile-avatar">
+      @if (profileStore.myProfile()?.avatar_url; as url) {
+        <ion-avatar>
+          <img [src]="url" alt="avatar" />
+        </ion-avatar>
+      } @else {
+        <div class="avatar-initial">{{ getInitial() }}</div>
+      }
+    </div>
+    <div class="profile-info">
+      <h2>{{ profileStore.myProfile()?.display_name || 'Your Name' }}</h2>
+      <p>@{{ profileStore.myProfile()?.username || 'username' }}</p>
+    </div>
+    <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+  </div>
+
+  <ion-list lines="none" class="settings-group">
+    <ion-item button (click)="openContacts()">
+      <div class="icon-circle blue" slot="start">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </div>
+      <ion-label>Contacts</ion-label>
+      <ion-icon name="chevron-forward" slot="end" class="chevron-item"></ion-icon>
+    </ion-item>
+
+    <ion-item button>
+      <div class="icon-circle orange" slot="start">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </div>
+      <ion-label>Notifications</ion-label>
+      <ion-icon name="chevron-forward" slot="end" class="chevron-item"></ion-icon>
+    </ion-item>
+
+    <ion-item button>
+      <div class="icon-circle purple" slot="start">
+        <ion-icon name="moon-outline"></ion-icon>
+      </div>
+      <ion-label>Appearance</ion-label>
+      <ion-icon name="chevron-forward" slot="end" class="chevron-item"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-list lines="none" class="settings-group">
+    <ion-item button (click)="open2FA()">
+      <div class="icon-circle green" slot="start">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </div>
+      <ion-label>Two-Factor Auth</ion-label>
+      <ion-icon name="chevron-forward" slot="end" class="chevron-item"></ion-icon>
+    </ion-item>
+
+    <ion-item button (click)="openSessions()">
+      <div class="icon-circle teal" slot="start">
+        <ion-icon name="phone-portrait-outline"></ion-icon>
+      </div>
+      <ion-label>Active Sessions</ion-label>
+      <ion-icon name="chevron-forward" slot="end" class="chevron-item"></ion-icon>
+    </ion-item>
+
+    <ion-item button (click)="openContacts()">
+      <div class="icon-circle gray" slot="start">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+      </div>
+      <ion-label>Privacy</ion-label>
+      <ion-icon name="chevron-forward" slot="end" class="chevron-item"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-list lines="none" class="settings-group">
+    <ion-item button class="logout-item" (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start" color="danger"></ion-icon>
+      <ion-label color="danger">Log Out</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p class="version-text">Mesty v0.1.0</p>
+</ion-content>

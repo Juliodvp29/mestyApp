@@ -1,43 +1,17 @@
 <ion-app>
-  <ion-split-pane contentId="main-content" when="md">
-    <ion-menu contentId="main-content" type="overlay">
-      <ion-header class="ion-no-border">
-        <ion-toolbar class="glass-effect">
-          <ion-title>Messages</ion-title>
-        </ion-toolbar>
-      </ion-header>
+  <ion-tabs>
+    <ion-router-outlet></ion-router-outlet>
 
-      <ion-content>
-        <ion-list lines="full">
-          <ion-item button routerLink="/chats" routerDirection="root">
-            <ion-icon slot="start" name="chatbubbles-outline"></ion-icon>
-            <ion-label>
-              <h2 class="body-emphasis">All Chats</h2>
-              <p>Recent messages</p>
-            </ion-label>
-          </ion-item>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="chats" href="/tabs/chats">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <ion-label>Chats</ion-label>
+      </ion-tab-button>
 
-          <ion-item button routerLink="/contacts" routerDirection="root">
-            <ion-icon slot="start" name="people-outline"></ion-icon>
-            <ion-label>
-              <h2 class="body-emphasis">Contacts</h2>
-              <p>People you know</p>
-            </ion-label>
-          </ion-item>
-
-          <ion-item button routerLink="/profile" routerDirection="root">
-            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            <ion-label>
-              <h2 class="body-emphasis">My Profile</h2>
-              <p>Settings & customize</p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-content>
-    </ion-menu>
-
-    <div class="ion-page" id="main-content">
-      <ion-router-outlet></ion-router-outlet>
-    </div>
-  </ion-split-pane>
+      <ion-tab-button tab="settings" href="/tabs/settings">
+        <ion-icon name="settings-outline"></ion-icon>
+        <ion-label>Settings</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
 </ion-app>

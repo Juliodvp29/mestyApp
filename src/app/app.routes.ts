@@ -4,29 +4,44 @@ import { authGuard } from '@core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'chats',
+    redirectTo: 'tabs/chats',
     pathMatch: 'full',
   },
   {
-    path: 'chats',
-    canActivate: [authGuard],
+    path: 'tabs',
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/chats/chat-list.component').then((m) => m.ChatListComponent),
+        redirectTo: 'chats',
+        pathMatch: 'full',
       },
       {
-        path: ':id',
+        path: 'chats',
+        canActivate: [authGuard],
         children: [
           {
             path: '',
-            loadComponent: () => import('./features/chats/chat-detail/chat-detail.component').then((m) => m.ChatDetailComponent),
+            loadComponent: () => import('./features/chats/chat-list.component').then((m) => m.ChatListComponent),
           },
           {
-            path: 'group-info',
-            loadComponent: () => import('./features/chats/group-info/group-info.component').then((m) => m.GroupInfoComponent),
-          }
-        ]
+            path: ':id',
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./features/chats/chat-detail/chat-detail.component').then((m) => m.ChatDetailComponent),
+              },
+              {
+                path: 'group-info',
+                loadComponent: () => import('./features/chats/group-info/group-info.component').then((m) => m.GroupInfoComponent),
+              }
+            ]
+          },
+        ],
+      },
+      {
+        path: 'settings',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent),
       },
     ],
   },
@@ -62,5 +77,9 @@ export const routes: Routes = [
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./features/profile/profile-edit/profile-edit-modal.component').then(m => m.ProfileEditModalComponent),
+  },
+  {
+    path: '**',
+    redirectTo: 'tabs/chats',
   },
 ];
