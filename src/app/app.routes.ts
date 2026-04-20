@@ -9,6 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'tabs',
+    loadComponent: () => import('./features/tabs/tabs.component').then(m => m.TabsComponent),
     children: [
       {
         path: '',
