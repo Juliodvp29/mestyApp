@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
+import { guestGuard } from '@core/guards/guest.guard';
 
 export const routes: Routes = [
   {
@@ -9,6 +10,7 @@ export const routes: Routes = [
   },
   {
     path: 'tabs',
+    canActivate: [authGuard],
     loadComponent: () => import('./features/tabs/tabs.component').then(m => m.TabsComponent),
     children: [
       {
@@ -18,7 +20,6 @@ export const routes: Routes = [
       },
       {
         path: 'chats',
-        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -41,7 +42,6 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        canActivate: [authGuard],
         loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent),
       },
     ],
@@ -51,10 +51,12 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
+        canActivate: [guestGuard],
         loadComponent: () => import('./features/auth/login/login.component').then((m) => m.LoginComponent),
       },
       {
         path: 'register',
+        canActivate: [guestGuard],
         loadComponent: () => import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
       },
       {

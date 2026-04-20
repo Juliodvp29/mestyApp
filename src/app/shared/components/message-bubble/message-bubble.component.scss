@@ -7,7 +7,7 @@
   flex-direction: column;
   margin: 2px 0;
   max-width: 78%;
-  animation: mestyFadeIn 0.15s ease both;
+  animation: mestyBubbleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
 
   &.mine {
     align-self: flex-end;
@@ -30,23 +30,23 @@
 }
 
 .bubble {
-  padding: 8px 12px;
-  border-radius: 18px;
+  padding: 9px 13px;
+  border-radius: var(--mesty-bubble-radius, 20px);
   position: relative;
   max-width: 100%;
   word-break: break-word;
   transition: transform var(--mesty-transition-fast);
 
   .mine & {
-    background: var(--ion-color-primary);
-    color: #ffffff;
-    border-bottom-right-radius: 4px;
+    background: var(--mesty-bubble-mine, var(--ion-color-primary));
+    color: var(--mesty-bubble-mine-text, #ffffff);
+    border-bottom-right-radius: 5px;
   }
 
   .theirs & {
-    background: var(--ion-color-step-100);
-    color: var(--ion-text-color);
-    border-bottom-left-radius: 4px;
+    background: var(--mesty-bubble-other, var(--ion-color-step-100));
+    color: var(--mesty-bubble-other-text, var(--ion-text-color));
+    border-bottom-left-radius: 5px;
   }
 
   &.deleted {
@@ -286,5 +286,16 @@
 
   &:active {
     transform: scale(0.88);
+  }
+}
+
+@keyframes mestyBubbleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }

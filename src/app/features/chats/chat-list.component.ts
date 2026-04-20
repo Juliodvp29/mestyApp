@@ -114,6 +114,15 @@ export class ChatListComponent implements OnInit {
     return name.charAt(0).toUpperCase();
   }
 
+  getAvatarClass(name: string): string {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % 6;
+    return `mesty-avatar-${index}`;
+  }
+
   getTypingText(chatId: string): string {
     const users = this.typingService.typingUsers()[chatId];
     if (!users || users.length === 0) return '';

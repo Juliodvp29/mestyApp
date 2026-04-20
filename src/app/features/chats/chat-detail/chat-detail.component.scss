@@ -22,6 +22,7 @@
   flex: 1;
   cursor: pointer;
   transition: opacity var(--mesty-transition-fast);
+  margin-inline-start: 6px;
 
   &:active {
     opacity: 0.7;
@@ -111,7 +112,7 @@
 .messages-list {
   display: flex;
   flex-direction: column;
-  padding: 12px 10px 8px;
+  padding: 12px 10px 20px;
   gap: 1px;
   min-height: 100%;
 }
@@ -226,7 +227,7 @@
 .compose-input {
   flex: 1;
   --background: var(--ion-color-step-100);
-  --border-radius: 22px;
+  --border-radius: 24px;
   --padding-start: 16px;
   --padding-end: 16px;
   --padding-top: 10px;
@@ -234,29 +235,29 @@
   font-size: 15px;
   letter-spacing: -0.016em;
   max-height: 120px;
-  border-radius: 22px;
+  border-radius: 24px;
   overflow: hidden;
   transition: box-shadow var(--mesty-transition-fast);
 
   &:focus-within {
-    box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+    box-shadow: 0 0 0 2.5px rgba(var(--ion-color-primary-rgb), 0.22);
   }
 }
 
 .send-btn {
   --border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   margin-bottom: 2px;
-  transition: transform var(--mesty-transition-fast);
+  transition: transform var(--mesty-transition-fast), box-shadow var(--mesty-transition-fast);
 
   &:active {
     transform: scale(0.88);
   }
 
   ion-icon {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   ion-spinner {

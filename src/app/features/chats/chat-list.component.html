@@ -2,10 +2,10 @@
   <ion-toolbar>
     <ion-title>Mesty</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button fill="solid" class="action-btn">
         <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="openChat('new')">
+      <ion-button fill="solid" class="action-btn" (click)="openChat('new')">
         <ion-icon slot="icon-only" name="add-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -75,7 +75,7 @@
                     <img [src]="chat.avatar_url" [alt]="getChatName(chat)" />
                   </ion-avatar>
                 } @else {
-                  <div class="avatar-initial">{{ getInitial(getChatName(chat)) }}</div>
+                  <div class="avatar-initial" [class]="getAvatarClass(getChatName(chat))">{{ getInitial(getChatName(chat)) }}</div>
                 }
                 @if (chat.chat_type === 'private' && chat.last_sender_id && presenceService.isOnline(chat.last_sender_id)) {
                   <span class="online-dot"></span>
@@ -128,7 +128,7 @@
                     <img [src]="chat.avatar_url" [alt]="getChatName(chat)" />
                   </ion-avatar>
                 } @else {
-                  <div class="avatar-initial">{{ getInitial(getChatName(chat)) }}</div>
+                  <div class="avatar-initial" [class]="getAvatarClass(getChatName(chat))">{{ getInitial(getChatName(chat)) }}</div>
                 }
                 @if (chat.chat_type === 'private' && chat.last_sender_id && presenceService.isOnline(chat.last_sender_id)) {
                   <span class="online-dot"></span>

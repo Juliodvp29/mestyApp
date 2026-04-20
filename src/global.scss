@@ -39,26 +39,27 @@ ion-tab-bar {
   -webkit-backdrop-filter: var(--mesty-glass-saturate) var(--mesty-glass-blur);
   border-top: 0.5px solid var(--mesty-separator);
   padding-bottom: env(safe-area-inset-bottom);
-  height: 50px;
+  height: 56px;
 }
 
 ion-tab-button {
-  --color: rgba(var(--ion-text-color-rgb), 0.4);
+  --color: rgba(var(--ion-text-color-rgb), 0.38);
   --color-selected: var(--ion-color-primary);
-  --padding-top: 6px;
-  --padding-bottom: 2px;
+  --padding-top: 8px;
+  --padding-bottom: 4px;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.01em;
   transition: color var(--mesty-transition-fast);
 
   ion-icon {
-    font-size: 24px;
-    transition: transform var(--mesty-transition-fast);
+    font-size: 23px;
+    margin-bottom: 3px;
+    transition: transform var(--mesty-transition-spring);
   }
 
   &.tab-selected ion-icon {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
 }
 
@@ -191,4 +192,20 @@ ion-back-button {
 
 ion-refresher-content {
   --color: var(--ion-color-primary);
+}
+
+.mesty-avatar-0 { background: var(--mesty-avatar-0); color: #fff; }
+.mesty-avatar-1 { background: var(--mesty-avatar-1); color: #fff; }
+.mesty-avatar-2 { background: var(--mesty-avatar-2); color: #fff; }
+.mesty-avatar-3 { background: var(--mesty-avatar-3); color: #fff; }
+.mesty-avatar-4 { background: var(--mesty-avatar-4); color: #fff; }
+.mesty-avatar-5 { background: var(--mesty-avatar-5); color: #fff; }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mesty-bubble-mine: #0a84ff;
+    --mesty-bubble-other: #2c2c2e;
+    --mesty-compose-bg: rgba(18, 18, 18, 0.92);
+    --mesty-brand-glow: radial-gradient(ellipse at 50% 0%, rgba(10, 132, 255, 0.10) 0%, transparent 70%);
+  }
 }

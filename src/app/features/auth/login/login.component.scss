@@ -3,39 +3,59 @@
   height: 100%;
 }
 
+.auth-content {
+  --background: var(--ion-background-color);
+}
+
+.auth-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60vh;
+  pointer-events: none;
+  z-index: 0;
+  background: var(--mesty-brand-glow);
+}
+
 .auth-container {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100%;
-  padding: 40px 24px 60px;
+  padding: 52px 24px 60px;
 }
 
 .auth-header {
-  margin-bottom: 44px;
+  margin-bottom: 48px;
   text-align: center;
 }
 
 .auth-logo {
-  font-size: 48px;
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
   line-height: 1;
-  color: var(--ion-color-primary);
   margin: 0;
+  background: linear-gradient(135deg, var(--ion-color-primary) 0%, #5e9fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 380px;
-  animation: mestySlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  max-width: 400px;
+  animation: mestySlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes mestySlideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -44,13 +64,13 @@
 }
 
 .step-header {
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 
   h2 {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: -0.028em;
-    line-height: 1.14;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
     color: var(--ion-text-color);
     margin: 0 0 8px;
   }
@@ -59,59 +79,78 @@
     font-size: 15px;
     color: var(--mesty-secondary-text);
     margin: 0;
-    line-height: 1.47;
+    line-height: 1.5;
     letter-spacing: -0.012em;
+
+    strong {
+      color: var(--ion-text-color);
+      font-weight: 600;
+    }
   }
 }
 
-.auth-form {
-  background: transparent;
-  padding: 0;
-  margin-bottom: 16px;
-}
-
-.auth-item {
-  --background: var(--ion-color-step-50);
-  --border-radius: 12px;
-  --padding-start: 16px;
-  --inner-padding-end: 16px;
-  --min-height: 56px;
+.phone-field-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--ion-color-step-50);
+  border-radius: 14px;
+  border: 1.5px solid var(--mesty-separator);
+  overflow: hidden;
+  min-height: 56px;
   margin-bottom: 10px;
-  border-radius: 12px;
-  transition: box-shadow 0.25s ease;
-
-  &.item-error {
-    --background: rgba(255, 69, 58, 0.06);
-    box-shadow: 0 0 0 1.5px rgba(255, 69, 58, 0.35);
-  }
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 
   &:focus-within {
-    box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.25);
+    border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.16);
+  }
+
+  &.field-error {
+    border-color: rgba(255, 69, 58, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 69, 58, 0.12);
   }
 }
 
-.otp-item {
-  ion-input {
-    font-size: 28px;
-    font-weight: 300;
-    letter-spacing: 0.22em;
-    text-align: center;
-  }
+.phone-prefix {
+  padding: 0 12px 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+  border-right: 1.5px solid var(--mesty-separator);
+  min-width: 56px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-height: 56px;
 }
 
-.field-error {
+.phone-input {
+  flex: 1;
+  --background: transparent;
+  --border-radius: 0;
+  --padding-start: 14px;
+  --padding-end: 16px;
+  --min-height: 56px;
+  font-size: 16px;
+  letter-spacing: -0.016em;
+}
+
+.field-error-note {
   display: block;
   font-size: 12px;
   padding: 4px 4px 0;
   margin-bottom: 4px;
   letter-spacing: -0.01em;
-  animation: mestyFadeIn 0.2s ease;
 }
 
 .error-banner {
   background: rgba(255, 69, 58, 0.08);
   border: 1px solid rgba(255, 69, 58, 0.18);
-  border-radius: 12px;
+  border-radius: 14px;
   color: var(--ion-color-danger);
   font-size: 14px;
   font-weight: 400;
@@ -123,12 +162,13 @@
 }
 
 .auth-button {
-  --border-radius: 14px;
-  height: 52px;
+  --border-radius: 16px;
+  height: 54px;
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.022em;
   margin-bottom: 12px;
+  transition: opacity var(--mesty-transition-fast);
 
   ion-spinner {
     width: 20px;
@@ -156,11 +196,6 @@
     text-decoration: none;
     font-weight: 600;
   }
-}
-
-@keyframes mestyFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 @keyframes mestyFadeSlideIn {

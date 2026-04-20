@@ -1,4 +1,5 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-glow"></div>
   <div class="auth-container">
     <div class="auth-header">
       <h1 class="auth-logo">Mesty</h1>
@@ -8,24 +9,23 @@
       <div class="auth-card" [formGroup]="phoneForm">
         <div class="step-header">
           <h2 class="section-heading">Sign In</h2>
-          <p class="body-standard">Enter your phone number to receive a code</p>
+          <p>Enter your phone number to receive a code</p>
         </div>
 
-        <ion-list lines="none" class="auth-form">
-          <ion-item class="auth-item" [class.item-error]="phoneForm.controls.phone.touched && phoneForm.controls.phone.invalid">
-            <ion-input
-              label="Phone Number"
-              labelPlacement="stacked"
-              type="tel"
-              placeholder="+1 555 123 4567"
-              formControlName="phone"
-              autocomplete="tel"
-            ></ion-input>
-          </ion-item>
-          @if (phoneForm.controls.phone.touched && phoneForm.controls.phone.invalid) {
-            <ion-note color="danger" class="field-error">Enter a valid phone number (e.g. +15551234567)</ion-note>
-          }
-        </ion-list>
+        <div class="phone-field-wrap" [class.field-error]="phoneForm.controls.phone.touched && phoneForm.controls.phone.invalid">
+          <div class="phone-prefix">{{ countryCode() }}</div>
+          <ion-input
+            type="tel"
+            placeholder="300 123 4567"
+            formControlName="phone"
+            autocomplete="tel"
+            class="phone-input"
+            (ionInput)="onPhoneInput($event)"
+          ></ion-input>
+        </div>
+        @if (phoneForm.controls.phone.touched && phoneForm.controls.phone.invalid) {
+          <ion-note color="danger" class="field-error-note">Enter a valid phone number</ion-note>
+        }
 
         @if (errorMessage()) {
           <div class="error-banner">{{ errorMessage() }}</div>
@@ -52,29 +52,17 @@
     }
 
     @if (step() === 'otp') {
-      <div class="auth-card" [formGroup]="otpForm">
+      <div class="auth-card">
         <div class="step-header">
           <h2 class="section-heading">Enter Code</h2>
-          <p class="body-standard">We sent a 6-digit code to {{ phoneForm.controls.phone.value }}</p>
+          <p>We sent a 6-digit code to <strong>{{ phoneForm.controls.phone.value }}</strong></p>
         </div>
 
-        <ion-list lines="none" class="auth-form">
-          <ion-item class="auth-item otp-item" [class.item-error]="otpForm.controls.code.touched && otpForm.controls.code.invalid">
-            <ion-input
-              label="Verification Code"
-              labelPlacement="stacked"
-              type="text"
-              maxlength="6"
-              placeholder="123456"
-              formControlName="code"
-              autocomplete="one-time-code"
-              inputmode="numeric"
-            ></ion-input>
-          </ion-item>
-          @if (otpForm.controls.code.touched && otpForm.controls.code.invalid) {
-            <ion-note color="danger" class="field-error">Enter the 6-digit code</ion-note>
-          }
-        </ion-list>
+        <app-otp-input
+          #otpRef
+          (codeChange)="otpCode.set($event)"
+          (codeComplete)="onVerifyOtp()"
+        ></app-otp-input>
 
         @if (errorMessage()) {
           <div class="error-banner">{{ errorMessage() }}</div>
@@ -84,7 +72,7 @@
           expand="block"
           color="primary"
           class="auth-button"
-          [disabled]="isLoading()"
+          [disabled]="isLoading() || otpCode().length !== 6"
           (click)="onVerifyOtp()"
         >
           @if (isLoading()) {
@@ -101,28 +89,17 @@
     }
 
     @if (step() === 'twofa') {
-      <div class="auth-card" [formGroup]="twoFaForm">
+      <div class="auth-card">
         <div class="step-header">
           <h2 class="section-heading">Two-Factor Auth</h2>
-          <p class="body-standard">Enter your authenticator app code</p>
+          <p>Enter your authenticator app code</p>
         </div>
 
-        <ion-list lines="none" class="auth-form">
-          <ion-item class="auth-item otp-item" [class.item-error]="twoFaForm.controls.code.touched && twoFaForm.controls.code.invalid">
-            <ion-input
-              label="Authenticator Code"
-              labelPlacement="stacked"
-              type="text"
-              maxlength="6"
-              placeholder="123456"
-              formControlName="code"
-              inputmode="numeric"
-            ></ion-input>
-          </ion-item>
-          @if (twoFaForm.controls.code.touched && twoFaForm.controls.code.invalid) {
-            <ion-note color="danger" class="field-error">Enter your 6-digit authenticator code</ion-note>
-          }
-        </ion-list>
+        <app-otp-input
+          #twoFaRef
+          (codeChange)="twoFaCode.set($event)"
+          (codeComplete)="onVerify2Fa()"
+        ></app-otp-input>
 
         @if (errorMessage()) {
           <div class="error-banner">{{ errorMessage() }}</div>
@@ -132,7 +109,7 @@
           expand="block"
           color="primary"
           class="auth-button"
-          [disabled]="isLoading()"
+          [disabled]="isLoading() || twoFaCode().length !== 6"
           (click)="onVerify2Fa()"
         >
           @if (isLoading()) {
