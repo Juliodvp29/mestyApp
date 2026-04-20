@@ -17,7 +17,16 @@ export const routes: Routes = [
       },
       {
         path: ':id',
-        loadComponent: () => import('./features/chats/chat-detail/chat-detail.component').then((m) => m.ChatDetailComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/chats/chat-detail/chat-detail.component').then((m) => m.ChatDetailComponent),
+          },
+          {
+            path: 'group-info',
+            loadComponent: () => import('./features/chats/group-info/group-info.component').then((m) => m.GroupInfoComponent),
+          }
+        ]
       },
     ],
   },
@@ -43,5 +52,15 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
     ],
+  },
+  {
+    path: 'contacts',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/contacts/contact-list/contact-list.component').then(m => m.ContactListComponent),
+  },
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/profile/profile-edit/profile-edit-modal.component').then(m => m.ProfileEditModalComponent),
   },
 ];

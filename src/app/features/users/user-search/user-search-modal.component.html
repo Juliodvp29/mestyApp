@@ -1,0 +1,59 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Global Search</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar 
+      placeholder="Find users by name or handle" 
+      (ionInput)="onSearch($event)"
+      debounce="500"
+      class="apple-searchbar">
+    </ion-searchbar>
+  </ion-toolbar>
+  @if (loading()) {
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  }
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (results().length === 0 && !loading()) {
+    <div class="search-empty">
+      @if (query().length < 2) {
+        <ion-icon name="search-outline"></ion-icon>
+        <p>Type at least 2 characters to search across Mesty</p>
+      } @else {
+        <p>No users found for "{{ query() }}"</p>
+      }
+    </div>
+  } @else {
+    <ion-list lines="full" class="apple-list">
+      @for (user of results(); track user.id) {
+        <ion-item button (click)="selectUser(user)">
+          <ion-avatar slot="start">
+            @if (user.avatar_url) {
+              <img [src]="user.avatar_url" alt="avatar" />
+            } @else {
+              <div class="avatar-placeholder">
+                {{ user.display_name.charAt(0).toUpperCase() }}
+              </div>
+            }
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ user.display_name }}</h2>
+            <p>@{{ user.username }}</p>
+          </ion-label>
+          <ion-buttons slot="end">
+            <ion-button fill="clear">
+              <ion-icon slot="icon-only" name="chatbubble-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>

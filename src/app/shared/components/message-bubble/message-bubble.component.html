@@ -12,7 +12,35 @@
       <span class="deleted-text"><ion-icon name="ban-outline" class="deleted-icon"></ion-icon> Message deleted</span>
     } @else {
       <div class="bubble-content">
-        @if (message().content_encrypted) {
+        @if (attachment; as attr) {
+          <div class="attachment-wrap" (click)="openLightbox()">
+            @if (attr.file_type.startsWith('image/')) {
+              <img [src]="attr.file_url" class="media-preview" />
+            } @else if (attr.file_type.startsWith('video/')) {
+              <div class="video-preview">
+                <ion-icon name="videocam-outline"></ion-icon>
+                <img [src]="attr.file_url" class="media-preview" />
+              </div>
+            } @else if (attr.file_type.startsWith('audio/')) {
+              <div class="file-chip">
+                <ion-icon name="musical-notes-outline" color="primary"></ion-icon>
+                <div class="file-info">
+                  <span class="file-name">{{ attr.file_name || 'Voice Message' }}</span>
+                </div>
+              </div>
+            } @else {
+              <div class="file-chip">
+                <ion-icon name="document-outline" color="primary"></ion-icon>
+                <div class="file-info">
+                  <span class="file-name">{{ attr.file_name || 'File' }}</span>
+                </div>
+                <ion-icon name="download-outline" slot="end" class="download-icon"></ion-icon>
+              </div>
+            }
+          </div>
+        }
+        
+        @if (message().content_encrypted && message().message_type !== 'file') {
           <p class="message-text"><ion-icon name="lock-closed-outline" class="encrypted-icon"></ion-icon> {{ message().content_encrypted }}</p>
         }
       </div>

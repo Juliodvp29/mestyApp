@@ -14,6 +14,8 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <app-stories-bar></app-stories-bar>
+
   @if (chatStore.loading() && chatStore.chats().length === 0) {
     <ion-list class="chat-list" lines="none">
       @for (item of skeletonItems; track item) {

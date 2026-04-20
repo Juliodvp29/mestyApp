@@ -1,0 +1,59 @@
+.apple-searchbar {
+  --background: #f2f2f7;
+  --border-radius: 10px;
+  padding: 8px 16px;
+}
+
+.search-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+  color: #8e8e93;
+  text-align: center;
+
+  ion-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    color: #aeaeb2;
+  }
+
+  p {
+    font-size: 15px;
+    max-width: 250px;
+  }
+}
+
+.apple-list {
+  background: transparent;
+
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+
+    h2 {
+      font-weight: 600;
+      font-size: 17px;
+      color: #1d1d1f;
+    }
+
+    p {
+      font-size: 14px;
+      color: #8e8e93;
+    }
+  }
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #e5e5ea;
+  color: #8e8e93;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+}

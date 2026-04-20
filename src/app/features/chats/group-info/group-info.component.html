@@ -1,0 +1,92 @@
+<ion-header [translucent]="true" class="ion-no-border group-info-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/chats"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Group Info</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="group-hero">
+    <div class="header-avatar">
+      @if (chat()?.avatar_url) {
+        <ion-avatar class="large-avatar">
+          <img [src]="chat()!.avatar_url" />
+        </ion-avatar>
+      } @else {
+        <div class="avatar-initial-large">{{ chat()?.name?.charAt(0) || 'G' }}</div>
+      }
+    </div>
+    <h1 class="group-name">{{ chat()?.name || 'Group Chat' }}</h1>
+    <p class="group-meta">{{ participants().length }} Participants</p>
+
+    <div class="quick-actions">
+      <ion-button fill="clear" class="action-btn">
+        <ion-icon slot="icon-only" name="person-add-outline"></ion-icon>
+        <ion-label>Add</ion-label>
+      </ion-button>
+      <ion-button fill="clear" class="action-btn" (click)="createInviteLink()">
+        <ion-icon slot="icon-only" name="link-outline"></ion-icon>
+        <ion-label>Link</ion-label>
+      </ion-button>
+    </div>
+  </div>
+
+  @if (inviteLink()) {
+    <ion-item lines="full" class="invite-link-item">
+      <ion-label>
+        <p>Invite Link</p>
+        <h2 class="link-text">{{ inviteLink() }}</h2>
+      </ion-label>
+      <ion-button slot="end" fill="clear" size="small">Copy</ion-button>
+    </ion-item>
+  }
+
+  <div class="section-label">Settings</div>
+  <ion-list lines="full" class="apple-list">
+    <ion-item>
+      <ion-label>Mute Notifications</ion-label>
+      <ion-toggle slot="end"></ion-toggle>
+    </ion-item>
+    <ion-item detail button>
+      <ion-label>Media, Links, and Docs</ion-label>
+      <ion-note slot="end">None</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-label">Participants</div>
+  <ion-list lines="full" class="apple-list">
+    @for (p of participants(); track p.user_id) {
+      <ion-item>
+        <ion-avatar slot="start">
+          @if (p.avatar_url) {
+            <img [src]="p.avatar_url" />
+          } @else {
+            <div class="avatar-placeholder">{{ p.display_name?.charAt(0) || 'U' }}</div>
+          }
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ p.display_name || 'Member' }}</h2>
+          <p>@{{ p.username || 'user' }}</p>
+        </ion-label>
+        @if (p.role !== 'member') {
+          <ion-badge slot="end" [color]="p.role === 'owner' ? 'warning' : 'primary'">{{ p.role }}</ion-badge>
+        }
+      </ion-item>
+    }
+  </ion-list>
+
+  <div class="section-label danger-zone">Danger Zone</div>
+  <ion-list lines="full" class="apple-list">
+    <ion-item button color="danger" detail="false">
+      <ion-icon slot="start" name="exit-outline"></ion-icon>
+      <ion-label>Exit Group</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

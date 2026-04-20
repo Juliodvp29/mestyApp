@@ -23,6 +23,7 @@ import { ChatStore } from '@features/chats/chat.store';
 import { PresenceService } from '@core/websocket/presence.service';
 import { TypingService } from '@core/websocket/typing.service';
 import { AuthService } from '@core/auth/auth.service';
+import { StoriesBarComponent } from '../stories/stories-bar/stories-bar.component';
 
 @Component({
   selector: 'app-chat-list',
@@ -45,6 +46,7 @@ import { AuthService } from '@core/auth/auth.service';
     IonIcon,
     IonButton,
     IonButtons,
+    StoriesBarComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

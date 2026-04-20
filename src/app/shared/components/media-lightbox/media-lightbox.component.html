@@ -1,0 +1,40 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="lightbox-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div class="header-content" slot="start">
+      <h2 class="filename">{{ fileName || 'Media' }}</h2>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button (click)="download()">
+        <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon slot="icon-only" name="share-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="lightbox-content">
+  <div class="media-container">
+    @if (isImage) {
+      <img [src]="url" [alt]="fileName" class="lightbox-media" />
+    } @else if (isVideo) {
+      <video [src]="url" controls autoplay class="lightbox-media"></video>
+    } @else if (isAudio) {
+      <div class="audio-wrapper">
+        <audio [src]="url" controls class="lightbox-audio"></audio>
+      </div>
+    } @else {
+      <div class="unsupported-file">
+        <ion-icon name="document-outline" size="large"></ion-icon>
+        <p>Preview not available for this file type.</p>
+        <ion-button fill="outline" (click)="download()">Download File</ion-button>
+      </div>
+    }
+  </div>
+</ion-content>

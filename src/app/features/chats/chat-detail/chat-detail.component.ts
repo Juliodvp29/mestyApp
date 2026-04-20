@@ -10,9 +10,9 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { map, firstValueFrom } from 'rxjs';
 import {
   IonHeader,
   IonToolbar,
@@ -25,9 +25,10 @@ import {
   IonAvatar,
   IonSpinner,
   IonTextarea,
+  IonProgressBar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { sendOutline, attachOutline, arrowUpOutline, chatbubbleEllipsesOutline } from 'ionicons/icons';
+import { sendOutline, attachOutline, arrowUpOutline, chatbubbleEllipsesOutline, imageOutline, documentOutline } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '@core/auth/auth.service';
 import { ChatStore } from '@features/chats/chat.store';
@@ -36,6 +37,8 @@ import { TypingService } from '@core/websocket/typing.service';
 import { MessageDetailStore } from '@features/chats/message-detail.store';
 import { MessageDateLabelPipe } from '@shared/pipes/message-date-label.pipe';
 import { MessageBubbleComponent } from '@shared/components/message-bubble/message-bubble.component';
+import { AttachmentService } from '@features/attachments/attachment.service';
+import { UploadProgressState } from '@features/attachments/attachment.models';
 
 @Component({
   selector: 'app-chat-detail',
@@ -55,7 +58,9 @@ import { MessageBubbleComponent } from '@shared/components/message-bubble/messag
     IonAvatar,
     IonSpinner,
     IonTextarea,
+    IonProgressBar,
     FormsModule,
+    RouterLink,
     MessageBubbleComponent,
     MessageDateLabelPipe
   ],
@@ -63,10 +68,12 @@ import { MessageBubbleComponent } from '@shared/components/message-bubble/messag
 })
 export class ChatDetailComponent implements OnInit, OnDestroy {
   @ViewChild('messagesEnd') messagesEnd!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly authService: AuthService = inject(AuthService);
   private readonly chatStore: ChatStore = inject(ChatStore);
+  private readonly attachmentService: AttachmentService = inject(AttachmentService);
   readonly presenceService: PresenceService = inject(PresenceService);
   readonly typingService: TypingService = inject(TypingService);
   readonly store: MessageDetailStore = inject(MessageDetailStore);
@@ -93,11 +100,22 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
   readonly messageText = signal('');
   readonly isSending = signal(false);
 
+  readonly uploadState = signal<UploadProgressState>({
+    state: 'idle',
+    progress: 0,
+    error: null,
+    result: null,
+  });
+
+  readonly isUploading = computed(() =>
+    ['requesting', 'uploading', 'confirming'].includes(this.uploadState().state)
+  );
+
   private typingTimer: ReturnType<typeof setTimeout> | null = null;
   private isTypingActive = false;
 
   constructor() {
-    addIcons({ sendOutline, attachOutline, arrowUpOutline, chatbubbleEllipsesOutline });
+    addIcons({ sendOutline, attachOutline, arrowUpOutline, chatbubbleEllipsesOutline, imageOutline, documentOutline });
 
     effect(() => {
       const messages = this.store.messages();
@@ -170,6 +188,80 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.onSend();
+    }
+  }
+
+  triggerFilePicker(): void {
+    this.fileInput?.nativeElement?.click();
+  }
+
+  async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    input.value = '';
+
+    this.uploadState.set({ state: 'requesting', progress: 0, error: null, result: null });
+
+    try {
+      const urlResponse = await firstValueFrom(
+        this.attachmentService.requestUploadUrl({
+          file_type: file.type,
+          file_size: file.size,
+          chat_id: this.chatId(),
+          file_name: file.name,
+        })
+      );
+
+      this.uploadState.update(s => ({ ...s, state: 'uploading', result: urlResponse }));
+
+      await new Promise<void>((resolve, reject) => {
+        this.attachmentService.uploadToS3(urlResponse.upload_url, file).subscribe({
+          next: (progress) => {
+            this.uploadState.update(s => ({ ...s, progress }));
+          },
+          error: reject,
+          complete: resolve,
+        });
+      });
+
+      this.uploadState.update(s => ({ ...s, state: 'confirming', progress: 100 }));
+
+      const attachmentMeta = JSON.stringify({
+        attachment_id: urlResponse.attachment_id,
+        file_url: urlResponse.file_url,
+        file_type: file.type,
+        file_name: file.name,
+        file_size: file.size,
+      });
+
+      const msgId = await this.store.sendMessage(
+        btoa(`[attachment]`),
+        btoa('placeholder-iv'),
+        'file',
+        attachmentMeta
+      );
+
+      if (msgId) {
+        await firstValueFrom(
+          this.attachmentService.confirmAttachment({
+            attachment_id: urlResponse.attachment_id,
+            message_id: msgId,
+          })
+        );
+      }
+
+      this.uploadState.set({ state: 'done', progress: 100, error: null, result: urlResponse });
+      setTimeout(() => this.uploadState.set({ state: 'idle', progress: 0, error: null, result: null }), 2000);
+
+    } catch (err: any) {
+      this.uploadState.set({
+        state: 'error',
+        progress: 0,
+        error: 'Failed to upload file. Please try again.',
+        result: null,
+      });
     }
   }
 

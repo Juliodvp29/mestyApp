@@ -110,17 +110,19 @@ export class MessageDetailStore {
     }
   }
 
-  async sendMessage(contentEncrypted: string, contentIv: string, replyToId?: string): Promise<void> {
+  async sendMessage(contentEncrypted: string, contentIv: string, messageType: ChatMessage['message_type'] = 'text', metadata?: string): Promise<string> {
     const sent = await firstValueFrom(
       this.http.post<ChatMessage>(`${environment.apiUrl}/chats/${this.chatId}/messages`, {
         content_encrypted: contentEncrypted,
         content_iv: contentIv,
-        message_type: 'text',
-        reply_to_id: replyToId ?? null,
+        message_type: messageType,
+        reply_to_id: null,
         is_forwarded: false,
+        metadata: metadata ? JSON.parse(metadata) : null,
       })
     );
     this.appendMessage(this.enrich(sent));
+    return sent.id;
   }
 
   async deleteMessage(messageId: string): Promise<void> {

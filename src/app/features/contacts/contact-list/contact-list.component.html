@@ -1,0 +1,77 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Contacts</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="person-add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar 
+      placeholder="Search contacts" 
+      (ionInput)="onSearch($event)"
+      class="apple-searchbar">
+    </ion-searchbar>
+  </ion-toolbar>
+  @if (contactStore.loading()) {
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  }
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Contacts</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (contactStore.contacts().length === 0 && !contactStore.loading()) {
+    <div class="empty-state">
+      <ion-icon name="person-add-outline" size="large"></ion-icon>
+      <h3>No Contacts Yet</h3>
+      <p>Contacts you add will appear here.</p>
+      <ion-button fill="clear">Sync Contacts</ion-button>
+    </div>
+  } @else {
+    <ion-list class="apple-list">
+      @for (group of groupedContacts(); track group.key) {
+        <ion-item-group>
+          <ion-item-divider sticky>
+            <ion-label>{{ group.key }}</ion-label>
+          </ion-item-divider>
+
+          @for (contact of group.contacts; track contact.id) {
+            <ion-item button lines="full" class="contact-item">
+              <ion-avatar slot="start">
+                <div class="avatar-placeholder">
+                  {{ contact.nickname.charAt(0).toUpperCase() }}
+                </div>
+              </ion-avatar>
+              <ion-label>
+                <h2>{{ contact.nickname }}</h2>
+                <p>{{ contact.phone }}</p>
+              </ion-label>
+              <ion-buttons slot="end">
+                <ion-button (click)="toggleFavorite(contact.id, $event)">
+                  <ion-icon 
+                    slot="icon-only" 
+                    [name]="contact.is_favorite ? 'star' : 'star-outline'"
+                    [color]="contact.is_favorite ? 'warning' : 'medium'">
+                  </ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          }
+        </ion-item-group>
+      }
+    </ion-list>
+  }
+</ion-content>

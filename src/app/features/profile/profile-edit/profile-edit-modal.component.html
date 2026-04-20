@@ -1,0 +1,82 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Edit Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [strong]="true" color="primary">
+        @if (profileStore.loading()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Done
+        }
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="avatar-section">
+    <ion-avatar (click)="onAvatarClick()">
+      @if (profileStore.myProfile()?.avatar_url; as url) {
+        <img [src]="url" alt="avatar" />
+      } @else {
+        <div class="avatar-placeholder">
+          {{ editForm.display_name.charAt(0).toUpperCase() || '?' }}
+        </div>
+      }
+      <div class="camera-overlay">
+        <ion-icon name="camera-outline"></ion-icon>
+      </div>
+    </ion-avatar>
+    <ion-button fill="clear" size="small" (click)="onAvatarClick()">Edit Avatar</ion-button>
+  </div>
+
+  <ion-list lines="full" class="apple-form">
+    <ion-item class="form-item">
+      <ion-label position="stacked">Display Name</ion-label>
+      <ion-input 
+        [(ngModel)]="editForm.display_name" 
+        placeholder="Your name"
+        class="apple-input">
+      </ion-input>
+    </ion-item>
+
+    <ion-item class="form-item">
+      <ion-label position="stacked">Username</ion-label>
+      <ion-input 
+        [(ngModel)]="editForm.username" 
+        placeholder="username"
+        class="apple-input">
+        <ion-note slot="start">@</ion-note>
+      </ion-input>
+    </ion-item>
+
+    <ion-item class="form-item">
+      <ion-label position="stacked">Bio</ion-label>
+      <ion-textarea 
+        [(ngModel)]="editForm.bio" 
+        placeholder="Tell us about yourself"
+        [autoGrow]="true"
+        rows="2"
+        class="apple-input">
+      </ion-textarea>
+    </ion-item>
+
+    <ion-item class="form-item">
+      <ion-label position="stacked">Status</ion-label>
+      <ion-input 
+        [(ngModel)]="editForm.status_text" 
+        placeholder="What's happening?"
+        class="apple-input">
+      </ion-input>
+    </ion-item>
+  </ion-list>
+
+  @if (profileStore.error(); as error) {
+    <div class="error-msg ion-padding">
+      <ion-text color="danger">{{ error }}</ion-text>
+    </div>
+  }
+</ion-content>

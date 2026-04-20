@@ -1,0 +1,53 @@
+<ion-content class="viewer-content">
+  <!-- Progress Indicators -->
+  <div class="progress-container">
+    @for (story of currentGroup.stories; track story.id; let i = $index) {
+      <div class="progress-track">
+        <div class="progress-bar" [style.width]="i < storyIndex() ? '100%' : (i === storyIndex() ? (progress() * 100 + '%') : '0%')"></div>
+      </div>
+    }
+  </div>
+
+  <ion-header class="ion-no-border viewer-header">
+    <ion-toolbar>
+      <ion-avatar slot="start">
+        @if (currentGroup.avatar_url) {
+          <img [src]="currentGroup.avatar_url" />
+        } @else {
+          <div class="placeholder-avatar">
+            {{ currentGroup.display_name.charAt(0) }}
+          </div>
+        }
+      </ion-avatar>
+      <ion-title>
+        <span class="user-name">{{ currentGroup.display_name }}</span>
+        <span class="story-time">{{ currentStory.created_at | date:'shortTime' }}</span>
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="dismiss()">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="media-container" (click)="dismiss()">
+    @if (currentStory.content_type.startsWith('image/')) {
+      <img [src]="currentStory.content_url" class="story-media" />
+    } @else if (currentStory.content_type.startsWith('video/')) {
+      <video [src]="currentStory.content_url" autoplay muted playsinline class="story-media"></video>
+    }
+    
+    @if (currentStory.caption) {
+      <div class="caption-overlay">
+        <p>{{ currentStory.caption }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- Navigation zones -->
+  <div class="nav-zones">
+    <div class="nav-prev" (click)="prevStory(); $event.stopPropagation()"></div>
+    <div class="nav-next" (click)="nextStory(); $event.stopPropagation()"></div>
+  </div>
+</ion-content>

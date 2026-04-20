@@ -1,0 +1,35 @@
+<div class="stories-scroll-container">
+  <!-- My Story Slot -->
+  <div class="story-item my-story" (click)="onAddStory()">
+    <div class="avatar-ring" [class.has-stories]="storiesStore.myStories().length > 0">
+      <ion-avatar>
+        @if (storiesStore.myStories().length > 0) {
+          <img [src]="storiesStore.myStories()[0].content_url" />
+        } @else {
+          <div class="placeholder-avatar">
+            <ion-icon name="add-outline"></ion-icon>
+          </div>
+        }
+      </ion-avatar>
+    </div>
+    <ion-text>My Status</ion-text>
+  </div>
+
+  <!-- Feed Stories -->
+  @for (group of storiesStore.feed(); track group.user_id; let i = $index) {
+    <div class="story-item" (click)="openStory(i)">
+      <div class="avatar-ring" [class.unviewed]="group.stories[0].has_viewed === false">
+        <ion-avatar>
+          @if (group.avatar_url) {
+            <img [src]="group.avatar_url" />
+          } @else {
+            <div class="placeholder-avatar">
+              {{ group.display_name.charAt(0) }}
+            </div>
+          }
+        </ion-avatar>
+      </div>
+      <ion-text>{{ group.display_name.split(' ')[0] }}</ion-text>
+    </div>
+  }
+</div>

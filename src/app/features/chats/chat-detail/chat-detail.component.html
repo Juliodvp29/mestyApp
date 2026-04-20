@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/chats"></ion-back-button>
     </ion-buttons>
 
-    <div class="header-center" slot="start">
+    <div class="header-center" slot="start" [routerLink]="['/chats', chatId(), 'group-info']" style="cursor: pointer;">
       <div class="header-avatar">
         @if (chat()?.avatar_url) {
           <ion-avatar>
@@ -84,7 +84,37 @@
     </div>
   }
 
+  @if (isUploading()) {
+    <div class="upload-progress-bar">
+      <ion-progress-bar
+        [value]="uploadState().progress / 100"
+        color="primary">
+      </ion-progress-bar>
+      <span class="upload-label">Uploading… {{ uploadState().progress }}%</span>
+    </div>
+  }
+
+  @if (uploadState().state === 'error') {
+    <div class="upload-error">{{ uploadState().error }}</div>
+  }
+
   <div class="compose-bar">
+    <ion-button
+      class="attach-btn"
+      fill="clear"
+      shape="round"
+      [disabled]="isUploading()"
+      (click)="triggerFilePicker()">
+      <ion-icon slot="icon-only" name="attach-outline"></ion-icon>
+    </ion-button>
+
+    <input
+      #fileInput
+      type="file"
+      accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
+      style="display:none"
+      (change)="onFileSelected($event)" />
+
     <ion-textarea
       class="compose-input"
       [(ngModel)]="messageText"
@@ -100,7 +130,7 @@
       class="send-btn"
       shape="round"
       color="primary"
-      [disabled]="!messageText().trim() || isSending()"
+      [disabled]="!messageText().trim() || isSending() || isUploading()"
       (click)="onSend()"
     >
       @if (isSending()) {
