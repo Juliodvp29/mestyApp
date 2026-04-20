@@ -42,7 +42,13 @@ export class AuthApiService {
   }
 
   loginVerify(payload: LoginVerifyRequest): Observable<LoginVerifyResponse> {
-    return this.http.post<LoginVerifyResponse>(`${this.baseUrl}/login/verify`, payload);
+    return this.http.post<LoginVerifyResponse>(`${this.baseUrl}/login/verify`, payload).pipe(
+      tap((response) => {
+        if (!('two_fa_required' in response)) {
+          this.authService.setSession(response);
+        }
+      })
+    );
   }
 
   twoFaVerify(payload: TwoFaVerifyRequest): Observable<AuthTokenResponse> {
